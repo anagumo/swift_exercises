@@ -22,8 +22,8 @@
 let name: String = "Super Awesome Market"
 let address: String = "Calle Ficticia, 123"
 let yearsOperated: Int = 10
-var customerSatisfactionAverage: Float = 4.5 // This data depends of the user evaluation, could change
-var isOpen: Bool = true // This data depends of the schedule of supermarket, could change
+let customerSatisfactionAverage: Float = 4.5 // This data depends of the user evaluation, could change but I set it as let
+let isOpen: Bool = true // This data depends of the schedule of supermarket, could change but I set it as let
 /*:
  ## Paso 2: Arrays - Gestionar inventario
  
