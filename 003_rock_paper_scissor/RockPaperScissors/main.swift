@@ -15,6 +15,28 @@ enum Option: String, CaseIterable {
     case Exit
 }
 
+/// Display options that can be selected to play with the computer
+/// - returns: an string (`String`) that represent a list of options
+/// - note: the function do not save the option selected by the user
+///
+/// # Implementation:
+/// To display the options must iterate all  enum (`Option`) cases
+///
+/// Usage:
+///```swift
+///let optionsMessage = displayOptions()
+///print(displayOptions)
+///```
+///
+///Output:
+///```
+///Select an option
+///0 - Rock
+///1 - Paper
+///2 - Scissors
+///3 - Exit
+///```
+
 func displayOptions() -> String {
     var optionsMessage = "Select an option\n"
     for (index, option) in Option.allCases.enumerated() {
