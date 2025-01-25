@@ -71,7 +71,7 @@ func displayOptions() -> String {
 /// - note: the function do not save the option selected by the user
 ///
 /// # Implementation:
-/// To handle the input create an enum (`Option`) using the rawValue
+/// To handle the input create an enum (`Option`) using its custom init
 ///
 /// Usage:
 ///```swift
@@ -83,13 +83,40 @@ func displayOptions() -> String {
 ///```
 ///Optional(RockPaperScissors.Option.Paper)
 ///```
-func readUserInput(_ inputText: String?) -> Option? {
+func readUserInput(_ inputText: String?) -> Option {
     let inputAsInt = Int(inputText ?? "") ?? -1
     guard let userOption = Option(input: inputAsInt) else {
-        return nil
+        return .Invalid
     }
     
     return userOption
+}
+
+/// Generate a random option for computer
+/// - returns: an enum (`Option`) case that represent a random option
+/// - note: the function do not save the option selected by the computer
+///
+/// # Implementation:
+/// To handle the input create an enum (`Option`) using its custom init
+///
+/// Usage:
+///```swift
+///let randomOption = generateRandomOption()
+///print(randomOption)
+///```
+///
+///Output:
+///```
+///Optional(RockPaperScissors.Option.Scissors)
+///```
+func generateRandomOption() -> Option {
+    let randomElement = (0...2).randomElement()
+    
+    guard let randomElement,
+          let randomOption = Option(input: randomElement) else {
+        return .Invalid
+    }
+    return randomOption
 }
 
 // MARK: Main function
@@ -105,10 +132,11 @@ func readUserInput(_ inputText: String?) -> Option? {
 /// - Uses a random number generator to select the computer answer
 func main() {
     var userOption: Option = .Invalid
+    let computerOption = generateRandomOption()
     
     while true {
         print(displayOptions())
-        userOption = readUserInput(readLine()) ?? .Invalid
+        userOption = readUserInput(readLine())
         
         guard userOption != .Quit else {
             break
@@ -119,7 +147,8 @@ func main() {
             return
         }
         
-        print("\nHas elegido \(userOption.rawValue)\n")
+        print("\nHas elegido \(userOption.rawValue)")
+        print("La computadora eligió \(computerOption)\n")
     }
 }
 
