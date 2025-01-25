@@ -56,6 +56,9 @@ enum Option: String, CaseIterable {
 func displayOptions() -> String {
     var optionsMessage = "Select an option\n"
     for (index, option) in Option.allCases.enumerated() {
+        guard option != Option.Invalid else {
+            return optionsMessage
+        }
         optionsMessage = optionsMessage + "\(index) - \(option.rawValue)\n"
     }
     return optionsMessage
@@ -80,8 +83,9 @@ func displayOptions() -> String {
 ///```
 ///Optional(RockPaperScissors.Option.Paper)
 ///```
-func readUserInput(_ inputText: String) -> Option? {
-    guard let userOption = Option(input: Int(inputText) ?? -1) else {
+func readUserInput(_ inputText: String?) -> Option? {
+    let inputAsInt = Int(inputText ?? "") ?? -1
+    guard let userOption = Option(input: inputAsInt) else {
         return nil
     }
     
@@ -99,6 +103,21 @@ func readUserInput(_ inputText: String) -> Option? {
 /// - The program should use a bucle to be able to play until the user exit
 /// - Handle invalid output with clear messages
 /// - Uses a random number generator to select the computer answer
-func main() {}
+func main() {
+    var userOption: Option = .Invalid
+    
+    while true {
+        print(displayOptions())
+        userOption = readUserInput(readLine()) ?? .Invalid
+        
+        if userOption == .Quit {
+            break
+        } else if userOption != .Invalid {
+            print("\nElegiste \(userOption.rawValue), waiting for the computer chooice...\n")
+        } else {
+            print("\nNo es una entrada válida\n")
+        }
+    }
+}
 
 main()
