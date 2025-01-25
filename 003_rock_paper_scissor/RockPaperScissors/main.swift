@@ -110,13 +110,16 @@ func main() {
         print(displayOptions())
         userOption = readUserInput(readLine()) ?? .Invalid
         
-        if userOption == .Quit {
+        guard userOption != .Quit else {
             break
-        } else if userOption != .Invalid {
-            print("\nElegiste \(userOption.rawValue), waiting for the computer chooice...\n")
-        } else {
-            print("\nNo es una entrada válida\n")
         }
+        
+        guard userOption != .Invalid else {
+            print("\nNo es una opción correcta\n")
+            return
+        }
+        
+        print("\nHas elegido \(userOption.rawValue)\n")
     }
 }
 
