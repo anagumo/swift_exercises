@@ -7,6 +7,21 @@
 
 import Foundation
 
+/// Representation of and option to play
+///
+/// # Implementation
+/// Use a custom init to handle the user input, add a case for an invalid input.
+///
+/// Usage:
+///```swift
+///let userOption = Option("1")
+///print(userOption)
+///```
+///
+///Output:
+///```
+///Optional(RockPaperScissors.Option.Paper)
+///```
 enum Option: String, CaseIterable {
     case Rock
     case Paper
@@ -165,10 +180,28 @@ func play(userOption: Option, computerOption: Option) -> GameState? {
 // MARK: Main function
 /// Implementation of the classic game "Rock, Paper or Scissor" where the user can play with the computer.
 ///
-/// #Implementation
-/// - The program should use a bucle to be able to play until the user exit
-/// - Handle invalid output with clear messages
-/// - Uses a random number generator to select the computer answer
+/// # Implementation
+///  - The program should use a bucle to be able to play until the user exit
+///  - Handle invalid output with clear messages
+///  - Uses a random number generator to select the computer answer
+///
+/// Usage:
+///```swift
+///main()
+///```
+///
+/// Output:
+///```
+///Select an option
+///0 - Rock
+///1 - Paper
+///2 - Scissors
+///3 - Quit
+///1
+///Has elegido Paper
+///El ordenador ha elegido Rock
+///Ganaste! Paper vence a Rock
+///```
 func main() {
     var userOption: Option = .Invalid
     let computerOption = generateRandomOption()
