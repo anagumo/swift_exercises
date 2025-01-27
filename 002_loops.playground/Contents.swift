@@ -144,8 +144,9 @@ func condense(_ str: String) -> String {
     var characters: [String] = []
     var whitespacesCounter = 0
     
+    // TODO: Fix with isWhitespace
     for char in str {
-        if char == " " {
+        if char.isWhitespace {
             if whitespacesCounter == 0 {
                 characters.append(String(char))
             }

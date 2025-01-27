@@ -8,8 +8,8 @@
 import Foundation
 
 struct GameResult {
-    var userOption: Option
-    let computerOption: Option
+    var userOption: OptionType
+    let computerOption: OptionType
     var gameState: GameState
     
     var continuePlaying: Bool {
