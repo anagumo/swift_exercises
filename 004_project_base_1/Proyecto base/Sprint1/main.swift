@@ -62,20 +62,17 @@ func getTotalDuration(songs: [Song]) -> Double {
 
 func getAlbumWithMoreSongs(songs: [Song]) -> (String, Int)? {
     var albumes: [String: Int] = [:]
-    
     songs.forEach { song in
-        guard let oldValue = albumes[song.basicInfo.album] else {
+        guard let oldCount = albumes[song.basicInfo.album] else {
             albumes[song.basicInfo.album] = 1
             return
         }
-        albumes[song.basicInfo.album] = oldValue + 1
+        albumes[song.basicInfo.album] = oldCount + 1
     }
     
-    let sortedAlbumes = albumes.sorted(by: { $0.value > $1.value })
-    guard let firstAlbum = sortedAlbumes.first else {
-        return nil
-    }
-    
+    let firstAlbum = albumes
+        .sorted(by: { $0.value > $1.value })
+        .prefix(1).first
     return firstAlbum
 }
 
