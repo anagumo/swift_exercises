@@ -76,6 +76,7 @@ struct Player {
               let randomOption = Option(input: randomElement) else {
             return .Invalid
         }
+        
         return randomOption
     }
 }

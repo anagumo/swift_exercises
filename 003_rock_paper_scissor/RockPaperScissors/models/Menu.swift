@@ -36,6 +36,7 @@ struct Menu {
         for (index, option) in options.enumerated() {
             textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }
+        
         return textMenu
     }
 }
