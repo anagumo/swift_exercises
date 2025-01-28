@@ -8,12 +8,28 @@
 import Foundation
 
 struct Game {
-    let menu: Menu = Menu(options: [Option(type: .Rock),
-                                    Option(type: .Paper),
-                                    Option(type: .Scissors),
-                                    Option(type: .Quit)])
+    private let menu: Menu = Menu(options: [.Rock, .Paper, .Scissors, .Quit])
     
     func play() {
-        print(menu.displayOptions())
+        var userPlayer = Player(type: .user, option: .Invalid)
+        var computerPlayer = Player(type: .computer, option: .Invalid)
+        var score = Score(type: .lost)
+        
+        while true {
+            print(menu.displayOptions())
+            userPlayer.option = userPlayer.generateUserOption(readLine())
+            computerPlayer.option = computerPlayer.generateRandomOption()
+            
+            guard userPlayer.continuePlaying else {
+                break
+            }
+            
+            if userPlayer.isValidOption {
+                score.evaluate(userOption: userPlayer.option, computerOption: computerPlayer.option)
+                print(score.display(userOption: userPlayer.option, computerOption: computerPlayer.option))
+            } else {
+                print("\nOpción inválida, selecciona una opción de la lista\n")
+            }
+        }
     }
 }

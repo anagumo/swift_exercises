@@ -34,7 +34,7 @@ struct Menu {
     func displayOptions() -> String {
         var textMenu = "Select an option\n"
         for (index, option) in options.enumerated() {
-            textMenu = textMenu + "\(index) - \(option.type.rawValue)\n"
+            textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }
         return textMenu
     }

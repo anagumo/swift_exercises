@@ -22,7 +22,7 @@ import Foundation
 ///```
 ///Optional(RockPaperScissors.OptionType.Paper)
 ///```
-enum OptionType: String {
+enum Option: String {
     case Rock
     case Paper
     case Scissors
@@ -43,8 +43,4 @@ enum OptionType: String {
             self = .Invalid
         }
     }
-}
-
-struct Option {
-    let type: OptionType
 }
