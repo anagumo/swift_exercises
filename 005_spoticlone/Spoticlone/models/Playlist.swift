@@ -7,9 +7,18 @@
 
 import Foundation
 
+enum PlaybackType {
+    case ascending
+    case descending
+    case random
+    case release // Ascending
+    case tonality
+    case popularity // Ascending, Descending
+    case bmp // Descending
+}
+
 struct Playlist {
     let name: String
-    let songs: String
-    let playbackMode: String
-    let playbackOrder: String
+    let songs: [Song]
+    let playbackMode: PlaybackType
 }

@@ -9,6 +9,16 @@ import Foundation
 
 struct Player {
     let songs: [Song]
-    let playlists: [Playlist]
-    let playbackInterval: Int
+    let playlists: [Playlist] = []
+    let djConfiguration: DJConfiguration
+    
+    func play() {
+        let menu = """
+            Bienvenido a spoticlone
+            1. Reproducir playlist
+            2. Crear playlist
+            3. Salir
+            """
+        print(menu)
+    }
 }

@@ -7,5 +7,11 @@
 
 import Foundation
 
-print("Hello, World!")
+func main() {
+    let djConfiguration = DJConfiguration(playlistMessage: "Amo la música más de lo que amo a la gente")
+    let spoticlonePlayer = Player(songs: [],
+                                  djConfiguration: djConfiguration)
+    spoticlonePlayer.play()
+}
 
+main()
