@@ -12,13 +12,8 @@ struct Player {
     let playlists: [Playlist] = []
     let djConfiguration: DJConfiguration
     
-    func play() {
-        let menu = """
-            Bienvenido a spoticlone
-            1. Reproducir playlist
-            2. Crear playlist
-            3. Salir
-            """
-        print(menu)
+    func open() {
+        let menu = Menu(options: [.Play, .Create, .Quit])
+        print(menu.displayMainOptions())
     }
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 enum PlaybackType {
-    case ascending
-    case descending
+    case asc
+    case des
     case random
     case release // Ascending
     case tonality
