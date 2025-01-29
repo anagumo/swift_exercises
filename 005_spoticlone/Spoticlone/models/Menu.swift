@@ -15,11 +15,11 @@ enum Option: String {
     
     init?(input: Int) {
         switch input {
-        case 1:
+        case 0:
             self = .Play
-        case 2:
+        case 1:
             self = .Create
-        case 3:
+        case 2:
             self = .Quit
         default:
             self = .Invalid
@@ -33,7 +33,7 @@ struct Menu {
     func displayMainOptions() -> String {
         var textMenu = "🎧 Welcome to Spoticlone\n"
         for (index, option) in options.enumerated() {
-            textMenu = textMenu + "\(index + 1) - \(option.rawValue)\n"
+            textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }
         
         return textMenu
