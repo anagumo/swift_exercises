@@ -31,7 +31,7 @@ struct Menu {
     let options: [Option]
     
     func displayMainOptions() -> String {
-        var textMenu = "Select an option\n"
+        var textMenu = "🎧 Welcome to Spoticlone\n"
         for (index, option) in options.enumerated() {
             textMenu = textMenu + "\(index + 1) - \(option.rawValue)\n"
         }
