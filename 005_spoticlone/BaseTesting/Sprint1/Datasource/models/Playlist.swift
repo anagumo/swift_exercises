@@ -7,17 +7,6 @@
 
 import Foundation
 
-protocol PlaylistUpdatable {
-    mutating func add(_ song: Song) -> [Song]
-    mutating func add(_ songs: [Song]) -> [Song]
-    mutating func delete(_ song: Song) -> [Song]
-    mutating func delete(_ songs: [Song]) -> [Song]
-    func getCount() -> Int
-    mutating func deleteAll()
-    func shuffle() -> [Song]
-    func orderBy(_ orderType: OrderType) -> [Song]
-}
-
 enum OrderType {
     case asc
     case des
@@ -38,22 +27,22 @@ struct Playlist: PlaylistUpdatable {
         return songs.reversed()
     }
     
-    mutating func add(_ songs: [Song]) -> [Song] {
+    mutating func add(contentsOf songs: [Song]) -> [Song] {
         self.songs.append(contentsOf: songs)
         return songs.reversed()
     }
     
     mutating func delete(_ song: Song) -> [Song] {
         songs.removeAll {
-            $0.name == song.name
+            $0.id == song.id
         }
         return songs.reversed()
     }
     
-    mutating func delete(_ songs: [Song]) -> [Song] {
+    mutating func delete(contentsOf songs: [Song]) -> [Song] {
         songs.forEach { userSong in
             self.songs.removeAll { dataSetSong in
-                userSong.name == dataSetSong.name
+                userSong.id == dataSetSong.id
             }
         }
         return self.songs.reversed()
@@ -81,19 +70,19 @@ struct Playlist: PlaylistUpdatable {
             return songs.shuffled()
         case .date:
             return songs.sorted {
-                $0.artist > $1.artist
+                $0.basicInfo.releaseDate > $1.basicInfo.releaseDate
             }
         case .tonality:
             return songs.sorted {
-                $0.artist > $1.artist
+                $0.technicalInfo.key > $1.technicalInfo.key
             }
         case .popularity:
             return songs.sorted {
-                $0.artist > $1.artist
+                $0.metadata.popularity > $1.metadata.popularity
             }
         case .bmp:
             return songs.sorted {
-                $0.artist > $1.artist
+                $0.technicalInfo.bpm > $1.technicalInfo.bpm
             }
         }
     }
