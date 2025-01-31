@@ -504,36 +504,179 @@ func compress(sequence: [Int], combinationOperation: IntCombiner) -> Int? {
         return nil
     }
     
-    // ? Needs a diferent value according operation, maybe add an enum to specify the operation type
-    var accum = 0
+    var accum = sequence[0]
     
-    sequence.forEach {
-        accum = combinationOperation($0, accum)
+    sequence.dropFirst().forEach {
+        accum = combinationOperation(accum, $0)
     }
     
     return accum
 }
 
+// MARK: - Exercise 15: compress with completion
+/// Combina los elementos de un array de enteros usando una operación específica y ejecuta una acción al finalizar
+///
+/// - Parameters:
+///   - sequence: Un array de enteros (`[Int]`) que contiene los números a combinar
+///   - initialValue: El valor inicial para comenzar la combinación (por defecto es 0)
+///   - combinationOperation: Una función que toma dos enteros y retorna un entero,
+///     definiendo cómo se combinarán los elementos
+///   - completion: Una closure de finalización que se ejecuta cuando la operación ha terminado,
+///     independientemente del resultado. No recibe parámetros y no retorna ningún valor
+///
+/// - Returns: Un entero opcional (`Int?`) que representa:
+///   - El resultado de combinar todos los elementos según la operación especificada
+///   - `nil` si el array está vacío
+///
+/// - Important: El completion handler se ejecutará SIEMPRE, incluso si el array está vacío
+///
+/// Ejemplo de uso:
+/// ```swift
+/// let numbers = [1, 2, 3, 4]
+///
+/// // Ejemplo básico con completion
+/// let result = compress(sequence: numbers,
+///                      combinationOperation: { $0 + $1 }) {
+///     print("¡Operación completada!")
+/// }
+/// // Output: "¡Operación completada!"
+/// // result contiene Optional(10)
+///
+/// // Ejemplo con valor inicial personalizado
+/// let resultWithInitial = compress(
+///     sequence: numbers,
+///     initialValue: 5,
+///     combinationOperation: { $0 + $1 }) {
+///         print("Suma completada con valor inicial")
+/// }
+/// // Output: "Suma completada con valor inicial"
+/// // resultWithInitial contiene Optional(15)
+///
+/// // Ejemplo con array vacío
+/// let empty = [Int]()
+/// let emptyResult = compress(
+///     sequence: empty,
+///     combinationOperation: { $0 + $1 }) {
+///         print("Procesamiento de array vacío completado")
+/// }
+/// // Output: "Procesamiento de array vacío completado"
+/// // emptyResult contiene nil
+/// ```
+
+func compress(sequence: [Int], initialValue: Int = 0, combinationOperation: (Int, Int) -> Int, completion: () -> ()) -> Int? {
+    guard !sequence.isEmpty else {
+        return nil
+    }
+    
+    var accum = initialValue
+    
+    sequence.forEach {
+        accum = combinationOperation(accum, $0)
+    }
+    completion()
+    
+    return accum
+}
+
+// MARK: - Exercise 16: squareSumAndPrintWithCompress
+/// Calcula la suma de los cuadrados de una secuencia de números e imprime un mensaje al completar
+///
+/// - Parameter sequence: Un array de enteros (`[Int]`) que contiene los números a procesar
+///
+/// - Returns: Un entero opcional (`Int?`) que representa:
+///   - La suma de los cuadrados de todos los números en la secuencia
+///   - `nil` si el array está vacío
+///
+/// La función imprime "squareSumAndPrintWithCompress operation completed." cuando termina la operación,
+/// independientemente del resultado
+///
+/// Ejemplo de uso:
+/// ```swift
+/// let numbers = [1, 2, 3]
+/// let result = squareSumAndPrintWithCompress(sequence: numbers)
+/// // Imprime: "squareSumAndPrintWithCompress operation completed."
+/// print(result) // Output: Optional(14) // (1² + 2² + 3² = 1 + 4 + 9 = 14)
+///
+/// let empty = [Int]()
+/// let emptyResult = squareSumAndPrintWithCompress(sequence: empty)
+/// // Imprime: "squareSumAndPrintWithCompress operation completed."
+/// print(emptyResult) // Output: nil
+///
+/// let singleNumber = [5]
+/// let singleResult = squareSumAndPrintWithCompress(sequence: singleNumber)
+/// // Imprime: "squareSumAndPrintWithCompress operation completed."
+/// print(singleResult) // Output: Optional(25) // (5² = 25)
+/// ```
+
+func squareSumAndPrintWithCompress(sequence: [Int]) -> Int? {
+    compress(sequence: sequence, initialValue: 0, combinationOperation: {
+        $0 + $1 * $1
+    }, completion: {
+        print("squareSumAndPrintWithCompress operation completed.")
+    })
+}
+
+// MARK: - Exercise 17: sumMultiplesOfThreeAndPrintWithCompress
+/// Calcula la suma de los múltiplos de 3 en una secuencia e imprime un mensaje después de 4 segundos
+///
+/// - Parameter sequence: Un array de enteros (`[Int]`) que contiene los números a procesar
+///
+/// - Returns: Un entero opcional (`Int?`) que representa:
+///   - La suma de todos los números que son múltiplos de 3 en la secuencia
+///   - `nil` si el array está vacío
+///
+/// - Important: La función imprime "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+///   4 segundos después de completar la operación. Buscad cómo implementar este delay.
+///
+/// Ejemplo de uso:
+/// ```swift
+/// let numbers = [1, 3, 4, 6, 7, 9]
+/// let result = sumMultiplesOfThreeAndPrintWithCompress(sequence: numbers)
+/// print(result) // Output: Optional(18) // (3 + 6 + 9 = 18)
+/// // Después de 4 segundos imprime:
+/// // "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+///
+/// let noMultiples = [1, 2, 4, 5, 7, 8]
+/// let resultNoMultiples = sumMultiplesOfThreeAndPrintWithCompress(sequence: noMultiples)
+/// print(resultNoMultiples) // Output: Optional(0)
+/// // Después de 4 segundos imprime:
+/// // "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+///
+/// let empty = [Int]()
+/// let emptyResult = sumMultiplesOfThreeAndPrintWithCompress(sequence: empty)
+/// print(emptyResult) // Output: nil
+/// // Después de 4 segundos imprime:
+/// // "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+/// ```
+
+func sumMultiplesOfThreeAndPrintWithCompress(sequence: [Int]) -> Int? {
+    compress(sequence: sequence, initialValue: 0, combinationOperation: {
+        $1 % 3 == 0 ? $0 + $1 : $0
+    }, completion: {
+        sleep(4)
+        print("squareSumAndPrintWithCompress operation completed.")
+    })
+}
 
 // MARK: - Closures Compress Tests
 func testSumAll() {
     let numbers = [1, 2, 3, 4, 5]
     let result = sumAll(sequence: numbers)
-    assert(result == 15, "La suma es incorrecta")
+    assert(result == 15, "sumAll failed")
     
     let empty = [Int]()
     let resultEmpty = sumAll(sequence: empty)
-    assert(resultEmpty == 0, "El resultado es incorrecto")
+    assert(resultEmpty == 0, "sumAll failed")
 }
 
 func testMultiplyAll() {
     let numbers = [2, 3, 4]
     let result = multiplyAll(sequence: numbers)
-    assert(result == 24, "El producto es incorrecto")
+    assert(result == 24, "multiplyAll failed")
     
     let empty = [Int]()
     let resultEmpty = multiplyAll(sequence: empty)
-    assert(result == 1, "El resultado es incorrecto")
+    assert(resultEmpty == 1, "multiplyAll failed")
 }
 
 func testCompress() {
@@ -542,203 +685,241 @@ func testCompress() {
     let sum = compress(sequence: numbers,
                        initialValue: 0,
                        combinationOperation: { $0 + $1 })
-    assert(sum == 10, "La suma es incorrecta")
+    assert(sum == 10, "compress failed")
     
     let product = compress(sequence: numbers,
                            initialValue: 1,
                            combinationOperation: { $0 * $1 })
-    assert(product == 24, "El producto es incorrecto")
+    assert(product == 24, "compress failed")
     
     func max(_ a: Int, _ b: Int) -> Int { return a > b ? a : b }
     let maximum = compress(sequence: numbers,
                            initialValue: Int.min,
                            combinationOperation: max)
-    assert(maximum == 4)
+    assert(maximum == 4, "compress failed")
 }
 
 func testSumWithCompress() {
     let numbers = [1, 2, 3, 4, 5]
     let result = sumWithCompress(sequence: numbers)
-    assert(result == 15, "La suma es incorrecta")
+    assert(result == 15, "sumWithCompress failed")
 }
 
 func testMultiplyWithCompress() {
     let numbers = [2, 3, 4]
     let result = multiplyWithCompress(sequence: numbers)
-    assert(result == 24, "El producto es incorrecto")
+    assert(result == 24, "multiplyWithCompress failed")
     
     let empty = [Int]()
     let resultEmpty = multiplyWithCompress(sequence: empty)
-    assert(resultEmpty == 1, "El producto para un array vacío debe ser 1")
+    assert(resultEmpty == 1, "multiplyWithCompress failed")
 }
 
 func testSumEvenWithCompress() {
     let numbers = [1, 2, 3, 4, 5, 6]
     let result = sumEvenWithCompress(sequence: numbers)
-    assert(result == 12, "La suma es incorrecta")
+    assert(result == 12, "sumEvenWithCompress failed")
     
     let noEvens = [1, 3, 5, 7]
     let resultNoEvens = sumEvenWithCompress(sequence: noEvens)
-    assert(resultNoEvens == 0, "La suma es incorrecta")
+    assert(resultNoEvens == 0, "sumEvenWithCompress failed")
     
     let empty = [Int]()
     let resultEmpty = sumEvenWithCompress(sequence: empty)
-    assert(resultEmpty == 0, "La suma es incorrecta")
+    assert(resultEmpty == 0, "sumEvenWithCompress failed")
 }
 
 func testSumEvensSubtractOddsWithCompress() {
     let numbers = [1, 2, 3, 4]
     let result = sumEvensSubtractOddsWithCompress(sequence: numbers)
-    assert(result == 2, "El resultado es incorrecto")
+    assert(result == 2, "sumEvensSubtractOddsWithCompress failed")
     
-    let onlyEvens = [2, 4, 6]
+    let onlyEvens = [1, 2, 4, 6]
     let resultEvens = sumEvensSubtractOddsWithCompress(sequence: onlyEvens)
-    assert(result == 2, "El resultado es incorrecto")
+    assert(resultEvens == 11, "sumEvensSubtractOddsWithCompress failed")
     
     let onlyOdds = [1, 3, 5]
     let resultOdds = sumEvensSubtractOddsWithCompress(sequence: onlyOdds)
-    assert(result == -9, "El resultado es incorrecto")
+    assert(resultOdds == -9, "sumEvensSubtractOddsWithCompress failed")
     
     let empty = [Int]()
     let resultEmpty = sumEvensSubtractOddsWithCompress(sequence: empty)
-    assert(result == 0, "El resultado es incorrecto")
+    assert(resultEmpty == 0, "sumEvensSubtractOddsWithCompress failed")
 }
 
 func testMaxElementWithCompress() {
     let numbers = [1, 5, 2, 8, 3]
     let result = maxElementWithCompress(sequence: numbers)
-    assert(result == 8, "El resultado es incorrecto")
+    assert(result == 8, "maxElementWithCompress failed")
     
     let negatives = [-5, -2, -8, -1]
     let resultNeg = maxElementWithCompress(sequence: negatives)
-    assert(result == -1, "El resultado es incorrecto")
-    ///
+    assert(resultNeg == -1, "maxElementWithCompress failed")
+    
     let empty = [Int]()
     let resultEmpty = maxElementWithCompress(sequence: empty)
-    assert(result == Int.min, "El resultado es incorrecto")
+    assert(resultEmpty == Int.min, "maxElementWithCompress failed")
     
     let singleElement = [42]
     let resultSingle = maxElementWithCompress(sequence: singleElement)
-    assert(result == 42, "El resultado es incorrecto")
+    assert(resultSingle == 42, "maxElementWithCompress failed")
 }
 
 func testMinElementWithCompress() {
     let numbers = [3, 1, 5, 2, 8]
     let result = minElementWithCompress(sequence: numbers)
-    assert(result == 1, "El resultado es incorrecto")
+    assert(result == 1, "minElementWithCompress failed")
     
     let negatives = [-5, -2, -8, -1]
     let resultNeg = minElementWithCompress(sequence: negatives)
-    assert(resultNeg == -8, "El resultado es incorrecto")
+    assert(resultNeg == -8, "minElementWithCompress failed")
     
     let empty = [Int]()
     let resultEmpty = minElementWithCompress(sequence: empty)
-    assert(resultEmpty == Int.max, "El resultado es incorrecto")
+    assert(resultEmpty == Int.max, "minElementWithCompress failed")
     
     let singleElement = [42]
     let resultSingle = minElementWithCompress(sequence: singleElement)
-    assert(resultSingle == 42, "El resultado es incorrecto")
+    assert(resultSingle == 42, "minElementWithCompress failed")
 }
 
 func testPositiveNumbersCountWithCompress() {
     let numbers = [-1, 0, 3, -4, 5, 6]
     let result = positiveNumbersCountWithCompress(sequence: numbers)
-    assert(result == 3, "El resultado es incorrecto")
+    assert(result == 3, "positiveNumbersCountWithCompress failed")
     
     let allNegative = [-1, -2, -3]
     let resultNeg = positiveNumbersCountWithCompress(sequence: allNegative)
-    assert(result == 0, "El resultado es incorrecto")
+    assert(resultNeg == 0, "positiveNumbersCountWithCompress failed")
     
     let withZero = [0, 0, 0]
     let resultZero = positiveNumbersCountWithCompress(sequence: withZero)
-    assert(result == 0, "El resultado es incorrecto")
+    assert(resultZero == 0, "positiveNumbersCountWithCompress failed")
     
     let empty = [Int]()
     let resultEmpty = positiveNumbersCountWithCompress(sequence: empty)
-    assert(result == 0, "El resultado es incorrecto")
+    assert(resultEmpty == 0, "positiveNumbersCountWithCompress failed")
 }
 
 func testAllEvensWithCompress() {
     let allEven = [2, 4, 6, 8]
     let result1 = allEvensWithCompress(sequence: allEven)
-    assert(result1, "El resultado es incorrecto")
+    assert(result1, "aAllEvensWithCompress failed")
     
     let someOdd = [2, 4, 5, 6]
     let result2 = allEvensWithCompress(sequence: someOdd)
-    assert(result2, "El resultado es incorrecto")
+    assert(result2 == false, "aAllEvensWithCompress failed")
     
     let empty = [Int]()
     let result3 = allEvensWithCompress(sequence: empty)
-    assert(result3, "El resultado es incorrecto")
+    assert(result3 == false, "aAllEvensWithCompress failed")
     
     let singleOdd = [3]
     let result4 = allEvensWithCompress(sequence: singleOdd)
-    assert(result4, "El resultado es incorrecto")
+    assert(result4 == false, "aAllEvensWithCompress failed")
     
     let singleEven = [2]
     let result5 = allEvensWithCompress(sequence: singleEven)
-    assert(result5, "El resultado es incorrecto")
+    assert(result5, "aAllEvensWithCompress failed")
 }
 
 func testAllMultiplesOfThreeWithCompress() {
     let allMultiples = [3, 6, 9, 12]
     let result1 = allMultiplesOfThreeWithCompress(sequence: allMultiples)
-    assert(result1 == true, "El resultado es incorrecto")
+    assert(result1 == true, "allMultiplesOfThreeWithCompress failed")
     
     let someNotMultiples = [3, 6, 7, 9]
     let result2 = allMultiplesOfThreeWithCompress(sequence: someNotMultiples)
-    assert(result1 == true, "El resultado es incorrecto")
+    assert(result2 == false, "allMultiplesOfThreeWithCompress failed")
     
     let empty = [Int]()
     let result3 = allMultiplesOfThreeWithCompress(sequence: empty)
-    assert(result1 == false, "El resultado es incorrecto")
+    assert(result3 == false, "allMultiplesOfThreeWithCompress failed")
     
     let singleNotMultiple = [4]
     let result4 = allMultiplesOfThreeWithCompress(sequence: singleNotMultiple)
-    assert(result1 == false, "El resultado es incorrecto")
+    assert(result4 == false, "allMultiplesOfThreeWithCompress failed")
     
     let singleMultiple = [6]
     let result5 = allMultiplesOfThreeWithCompress(sequence: singleMultiple)
-    assert(result1 == true, "El resultado es incorrecto")
+    assert(result5 == true, "allMultiplesOfThreeWithCompress failed")
 }
 
 func testSumAllEvensAndOddsWithCompress() {
     let numbers = [1, 2, 3, 4, 5, 6]
     let result = sumAllEvensAndOddsWithCompress(sequence: numbers)
-    assert(result.sumOfEvens == 12, "El resultado es incorrecto")
-    assert(result.sumOfOdds == 9, "El resultado es incorrecto")
+    assert(result.sumOfEvens == 12, "sumAllEvensAndOddsWithCompress failed")
+    assert(result.sumOfOdds == 9, "sumAllEvensAndOddsWithCompress failed")
     
     let onlyEvens = [2, 4, 6]
     let resultEvens = sumAllEvensAndOddsWithCompress(sequence: onlyEvens)
-    assert(resultEvens == (sumOfEvens: 12, sumOfOdds: 0), "El resultado es incorrecto")
+    assert(resultEvens == (sumOfEvens: 12, sumOfOdds: 0), "sumAllEvensAndOddsWithCompress failed")
     
     let onlyOdds = [1, 3, 5]
     let resultOdds = sumAllEvensAndOddsWithCompress(sequence: onlyOdds)
-    assert(resultOdds == (sumOfEvens: 0, sumOfOdds: 9), "El resultado es incorrecto")
+    assert(resultOdds == (sumOfEvens: 0, sumOfOdds: 9), "sumAllEvensAndOddsWithCompress failed")
     
     let empty = [Int]()
     let resultEmpty = sumAllEvensAndOddsWithCompress(sequence: empty)
-    assert(resultOdds == (sumOfEvens: 0, sumOfOdds: 0), "El resultado es incorrecto")
+    assert(resultEmpty == (sumOfEvens: 0, sumOfOdds: 0), "sumAllEvensAndOddsWithCompress failed")
 }
 
 func testCompressModified() {
     let numbers = [1, 2, 3, 4]
     let sum = compress(sequence: numbers) { $0 + $1 }
-    assert(sum == Optional(10), "El resultado es incorrecto")
+    assert(sum == Optional(10), "compressModified failed")
     
     let maximum = compress(sequence: numbers) { max($0, $1) }
-    assert(maximum == Optional(4), "El resultado es incorrecto")
+    assert(maximum == Optional(4), "compressModified failed")
     
     let product = compress(sequence: numbers) { $0 * $1 }
-    assert(product == Optional(24), "El resultado es incorrecto")
+    assert(product == Optional(24), "compressModified failed")
     
     let empty = [Int]()
     let resultEmpty = compress(sequence: empty) { $0 + $1 }
-    assert(resultEmpty == nil, "El resultado es incorrecto")
+    assert(resultEmpty == nil, "compressModified failed")
     
     let singleElement = [5]
     let resultSingle = compress(sequence: singleElement) { $0 + $1 }
-    assert(resultSingle == Optional(5), "El resultado es incorrecto")
+    assert(resultSingle == Optional(5), "compressModified failed")
+}
+
+func testCompressWithCompletion() {
+    let numbers = [1, 2, 3, 4]
+    
+    let result = compress(sequence: numbers,
+                          combinationOperation: { $0 + $1 }) {
+        print("¡Operación completada!")
+    }
+    assert(result == Optional(10), "compressWithCompletion failed")
+    
+    let resultWithInitial = compress(sequence: numbers,
+                                     initialValue: 5,
+                                     combinationOperation: { $0 + $1 }) {
+        print("Suma completada con valor inicial")
+    }
+    assert(resultWithInitial == Optional(15), "compressWithCompletion failed")
+    
+    let empty = [Int]()
+    let emptyResult = compress(sequence: empty,
+                               combinationOperation: { $0 + $1 }) {
+        print("Procesamiento de array vacío completado")
+    }
+    assert(emptyResult == nil, "compressWithCompletion failed")
+}
+
+func testSquareSumAndPrintWithCompress() {
+    let numbers = [1, 2, 3]
+    let result = squareSumAndPrintWithCompress(sequence: numbers)
+    assert(result == Optional(14), "squareSumAndPrintWithCompress failed")
+    
+    let empty = [Int]()
+    let emptyResult = squareSumAndPrintWithCompress(sequence: empty)
+    assert(emptyResult == nil, "squareSumAndPrintWithCompress failed")
+    
+    let singleNumber = [5]
+    let singleResult = squareSumAndPrintWithCompress(sequence: singleNumber)
+    assert(singleResult == Optional(25), "squareSumAndPrintWithCompress failed")
 }
 
 func runAllTests() {
@@ -756,4 +937,10 @@ func runAllTests() {
     testAllMultiplesOfThreeWithCompress()
     testSumAllEvensAndOddsWithCompress()
     testCompressModified()
+    testCompressWithCompletion()
+    testSquareSumAndPrintWithCompress()
+    print("All tests passed 💪🏻")
 }
+
+runAllTests()
+
