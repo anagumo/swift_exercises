@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PlaylistUpdatable {
-    mutating func add(_ song: Song) -> [Song]
+    mutating func add(_ song: Song)
     mutating func add(contentsOf songs: [Song]) -> [Song]
     mutating func delete(_ song: Song) -> [Song]
     mutating func delete(contentsOf songs: [Song]) -> [Song]
@@ -16,6 +16,10 @@ protocol PlaylistUpdatable {
     mutating func deleteAll()
     func shuffle() -> [Song]
     func play(_ orderType: PlayMode) -> [Song]
+}
+
+protocol DJUpdatable {
+    mutating func add(playlist: Playlist)
 }
 
 protocol StyleUpdatable {

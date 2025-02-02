@@ -18,13 +18,13 @@ enum PlayMode {
 }
 
 struct Playlist: PlaylistUpdatable {
-    let name: String
+    var id: Int
+    var name: String
     var songs: [Song]
     let playMode: PlayMode
     
-    mutating func add(_ song: Song) -> [Song] {
+    mutating func add(_ song: Song) {
         songs.append(song)
-        return songs.reversed()
     }
     
     mutating func add(contentsOf songs: [Song]) -> [Song] {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DJConfiguration {
+struct DJConfiguration: DJUpdatable {
     var option: Option = .Invalid
     let playbackInterval: Int = 5
     let playlistMessage: String
@@ -21,5 +21,9 @@ struct DJConfiguration {
         }
         
         return option
+    }
+    
+    mutating func add(playlist: Playlist) {
+        playlists.append(playlist)
     }
 }

@@ -16,7 +16,7 @@ class Main {
 
     // MARK: - Main
     func main() {
-        let spoticlonePlayer = Player()
+        var spoticlonePlayer = Player()
         spoticlonePlayer.open()
     }
 }
