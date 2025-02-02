@@ -40,9 +40,9 @@ struct Playlist: PlaylistUpdatable {
     }
     
     mutating func delete(contentsOf songs: [Song]) -> [Song] {
-        songs.forEach { userSong in
+        songs.forEach { song in
             self.songs.removeAll { dataSetSong in
-                userSong.id == dataSetSong.id
+                song.id == dataSetSong.id
             }
         }
         return self.songs.reversed()
@@ -61,29 +61,43 @@ struct Playlist: PlaylistUpdatable {
     }
     
     func orderBy(_ orderType: OrderType) -> [Song] {
+        var orderedSongs: [Song] = []
+        
         switch orderType {
         case .asc:
-            return songs.reversed()
+            orderedSongs = songs.reversed()
         case .des:
-            return songs
+            orderedSongs = songs
         case .shuffle:
-            return songs.shuffled()
+            orderedSongs = songs.shuffled()
         case .date:
-            return songs.sorted {
+            orderedSongs = songs.sorted {
                 $0.basicInfo.releaseDate > $1.basicInfo.releaseDate
             }
         case .tonality:
-            return songs.sorted {
-                $0.technicalInfo.key > $1.technicalInfo.key
+            var tonalities: [String: [Song]] = [:]
+            songs.forEach { song in
+                if var oldSongs = tonalities[song.technicalInfo.key] {
+                    oldSongs.append(song)
+                    tonalities[song.technicalInfo.key] = oldSongs
+                } else {
+                    tonalities[song.technicalInfo.key] = []
+                }
             }
+            
+            tonalities.forEach { tonality in
+                orderedSongs.append(contentsOf: tonality.value)
+            } // TODO: Sort by C to A
         case .popularity:
-            return songs.sorted {
+            orderedSongs = songs.sorted {
                 $0.metadata.popularity > $1.metadata.popularity
             }
         case .bmp:
-            return songs.sorted {
+            orderedSongs = songs.sorted {
                 $0.technicalInfo.bpm > $1.technicalInfo.bpm
             }
         }
+        
+        return orderedSongs // Based on Dijstra I just use one return
     }
 }
