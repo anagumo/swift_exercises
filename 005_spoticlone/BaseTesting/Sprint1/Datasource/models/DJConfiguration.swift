@@ -12,6 +12,7 @@ struct DJConfiguration {
     let playbackInterval: Int = 5
     let playlistMessage: String
     var playlists: [Playlist] = []
+    let style: DJStyle? = nil
     
     func readOption(_ inputText: String?) -> Option {
         let inputAsInt = Int(inputText ?? "") ?? -1

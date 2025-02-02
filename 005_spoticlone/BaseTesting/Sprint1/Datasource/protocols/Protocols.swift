@@ -15,5 +15,9 @@ protocol PlaylistUpdatable {
     func getCount() -> Int
     mutating func deleteAll()
     func shuffle() -> [Song]
-    func orderBy(_ orderType: OrderType) -> [Song]
+    func play(_ orderType: PlayMode) -> [Song]
+}
+
+protocol StyleUpdatable {
+    mutating func add(tag: String)
 }

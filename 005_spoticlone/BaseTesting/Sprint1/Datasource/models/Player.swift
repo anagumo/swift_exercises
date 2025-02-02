@@ -42,7 +42,7 @@ struct Player {
             }
             print("Enter songs, ej: 3,5,1\n")
             
-            let playlist = Playlist(name: name ?? "", songs: songs, playbackMode: .asc)
+            let playlist = Playlist(name: name ?? "", songs: songs, playMode: .asc)
             
             print("The playlist \(name) was created with \(songs.count) songs")
             playlist.songs.enumerated().forEach { (index,song) in

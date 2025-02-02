@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum OrderType {
+enum PlayMode {
     case asc
     case des
     case shuffle
@@ -20,7 +20,7 @@ enum OrderType {
 struct Playlist: PlaylistUpdatable {
     let name: String
     var songs: [Song]
-    let playbackMode: OrderType
+    let playMode: PlayMode
     
     mutating func add(_ song: Song) -> [Song] {
         songs.append(song)
@@ -57,13 +57,13 @@ struct Playlist: PlaylistUpdatable {
     }
     
     func shuffle() -> [Song] {
-        orderBy( .shuffle)
+        play( .shuffle)
     }
     
-    func orderBy(_ orderType: OrderType) -> [Song] {
+    func play(_ playMode: PlayMode) -> [Song] {
         var orderedSongs: [Song] = []
         
-        switch orderType {
+        switch playMode {
         case .asc:
             orderedSongs = songs.reversed()
         case .des:
@@ -99,5 +99,11 @@ struct Playlist: PlaylistUpdatable {
         }
         
         return orderedSongs // Based on Dijstra I just use one return
+    }
+    
+    func filter(by style: DJStyle) -> [Song] {
+        songs.filter {
+            Set($0.metadata.tags) == style.tags
+        }
     }
 }
