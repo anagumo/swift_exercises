@@ -8,18 +8,21 @@
 import Foundation
 
 enum Option: String {
-    case Play = "Select a playlist"
-    case Create = "Create a playlist"
+    case Playlist = "Select a playlist"
+    case Style = "Select a style"
+    case Discovery = "Discover new music"
     case Quit = "Quit player"
     case Invalid
     
     init?(input: Int) {
         switch input {
         case 0:
-            self = .Play
+            self = .Playlist
         case 1:
-            self = .Create
+            self = .Style
         case 2:
+            self = .Discovery
+        case 3:
             self = .Quit
         default:
             self = .Invalid
