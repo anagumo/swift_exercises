@@ -7,21 +7,10 @@
 
 import Foundation
 
-enum PlayMode {
-    case asc
-    case des
-    case shuffle
-    case date
-    case tonality
-    case popularity
-    case bmp
-}
-
 struct Playlist: PlaylistUpdatable {
     var id: String
     var name: String
     var songs: [Song]
-    let playMode: PlayMode
     
     mutating func add(_ song: Song) {
         songs.append(song)
@@ -31,20 +20,18 @@ struct Playlist: PlaylistUpdatable {
         self.songs.append(contentsOf: songs)
     }
     
-    mutating func delete(_ song: Song) -> [Song] {
+    mutating func delete(_ song: Song) {
         songs.removeAll {
             $0.id == song.id
         }
-        return songs.reversed()
     }
     
-    mutating func delete(contentsOf songs: [Song]) -> [Song] {
+    mutating func delete(contentsOf songs: [Song]) {
         songs.forEach { song in
             self.songs.removeAll { dataSetSong in
                 song.id == dataSetSong.id
             }
         }
-        return self.songs.reversed()
     }
     
     func getCount() -> Int {

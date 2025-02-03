@@ -7,12 +7,23 @@
 
 import Foundation
 
+enum PlayMode {
+    case asc
+    case des
+    case shuffle
+    case date
+    case tonality
+    case popularity
+    case bmp
+}
+
 struct Player: PlayerTasks {
     private let songs = SongsLoader().songs
     private var djConfiguration = DJConfiguration(playlistMessage: "I love music more than I love people, ¡party is over!")
+    private var playMode: PlayMode = .asc // Change the play mode manually
     
     mutating func open() {
-        let menu = Menu(options: [.Playlist, .Style, .Discovery, .Quit]) // TODO: Validate playlist array to avoid show play
+        let menu = Menu(options: [.Playlist, .Style, .Discovery, .Quit])
         
         while true {
             print(menu.displayMainOptions())
@@ -38,6 +49,7 @@ struct Player: PlayerTasks {
         if djConfiguration.hasPlaylists() {
             print("Select a playlist:")
             print(djConfiguration.displayPlaylists())
+            // TODO: Validate user input
             playPlaylist(id: readLine() ?? "") {
                 print("\(djConfiguration.playlistMessage)\n")
             }
@@ -48,7 +60,8 @@ struct Player: PlayerTasks {
     
     private func playPlaylist(id: String, completionHandler: () -> ()) {
         if let playlist = djConfiguration.get(playlist: id) {
-            playlist.order(by: playlist.playMode).forEach { song in
+            // TODO: Implement play mode selection
+            playlist.order(by: playMode).forEach { song in
                 print("Playing... \(song.basicInfo.title)")
                 sleep(UInt32(djConfiguration.playbackInterval))
             }
@@ -63,7 +76,7 @@ struct Player: PlayerTasks {
         let playlistName = readLine() ?? ""
         
         // TODO: Validate if the playlist name exists
-        var playlist = Playlist(id: "1", name: playlistName.isEmpty ? "untitled" : playlistName, songs: [], playMode: .asc)
+        var playlist = Playlist(id: "1", name: playlistName.isEmpty ? "untitled" : playlistName, songs: [])
         
         // Display songs to be selected by the user
         print(displayAvailableSongs())

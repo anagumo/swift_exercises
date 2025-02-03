@@ -15,8 +15,8 @@ protocol PlayerTasks {
 protocol PlaylistUpdatable {
     mutating func add(_ song: Song)
     mutating func add(contentsOf songs: [Song])
-    mutating func delete(_ song: Song) -> [Song]
-    mutating func delete(contentsOf songs: [Song]) -> [Song]
+    mutating func delete(_ song: Song)
+    mutating func delete(contentsOf songs: [Song])
     func getCount() -> Int
     mutating func deleteAll()
     func shuffle() -> [Song]
