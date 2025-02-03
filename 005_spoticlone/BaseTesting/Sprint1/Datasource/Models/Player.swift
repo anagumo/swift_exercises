@@ -116,6 +116,7 @@ struct Player: PlayerTasks {
         
         var tags = Set<String>()
         if styleType == .Custom {
+            print("Enter tags for your style: ")
             let tagsInput = readLine()?.components(separatedBy: .whitespaces)
             tags = Set(tagsInput ?? [])
         } else {
