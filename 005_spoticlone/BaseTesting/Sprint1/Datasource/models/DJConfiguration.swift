@@ -33,7 +33,14 @@ struct DJConfiguration: DJUpdatable {
         }
     }
     
-    mutating func add(playlist: Playlist) {
+    mutating func add(playlist: Playlist, completionHandler: () -> ()) {
         playlists.append(playlist)
+        completionHandler()
+    }
+    
+    func get(playlist id: String) -> Playlist? {
+        playlists.first {
+            $0.id == id
+        }
     }
 }

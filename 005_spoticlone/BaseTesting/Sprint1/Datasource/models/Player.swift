@@ -7,14 +7,9 @@
 
 import Foundation
 
-protocol PlayerTasks {
-    mutating func open()
-    mutating func selectPlaylist()
-}
-
 struct Player: PlayerTasks {
-    let songs = SongsLoader().songs
-    var djConfiguration = DJConfiguration(playlistMessage: "Amo la música más de lo que amo a la gente")
+    private let songs = SongsLoader().songs
+    private var djConfiguration = DJConfiguration(playlistMessage: "I love music more than I love people, ¡party is over!")
     
     mutating func open() {
         let menu = Menu(options: [.Playlist, .Style, .Discovery, .Quit]) // TODO: Validate playlist array to avoid show play
@@ -41,10 +36,25 @@ struct Player: PlayerTasks {
     
     mutating func selectPlaylist() {
         if djConfiguration.hasPlaylists() {
-            // TODO: Select a playlist
+            print("Select a playlist:")
             print(djConfiguration.displayPlaylists())
+            playPlaylist(id: readLine() ?? "") {
+                print("\(djConfiguration.playlistMessage)\n")
+            }
         } else {
             createPlaylist()
+        }
+    }
+    
+    private func playPlaylist(id: String, completionHandler: () -> ()) {
+        if let playlist = djConfiguration.get(playlist: id) {
+            playlist.order(by: playlist.playMode).forEach { song in
+                print("Playing... \(song.basicInfo.title)")
+                sleep(UInt32(djConfiguration.playbackInterval))
+            }
+            completionHandler()
+        } else {
+            print("Playlist not found")
         }
     }
     
@@ -53,7 +63,7 @@ struct Player: PlayerTasks {
         let playlistName = readLine() ?? ""
         
         // TODO: Validate if the playlist name exists
-        var playlist = Playlist(id: 1, name: playlistName.isEmpty ? "untitled" : playlistName, songs: [], playMode: .asc)
+        var playlist = Playlist(id: "1", name: playlistName.isEmpty ? "untitled" : playlistName, songs: [], playMode: .asc)
         
         // Display songs to be selected by the user
         print(displayAvailableSongs())
@@ -66,7 +76,9 @@ struct Player: PlayerTasks {
                 playlist.add(contentsOf: songs.filter {
                     songsInput.contains($0.id)
                 })
-                djConfiguration.add(playlist: playlist)
+                djConfiguration.add(playlist: playlist) {
+                    print("Playlist \(playlist.name) created with \(playlist.getCount()) songs\n")
+                }
             } else {
                 print("Select songs to add, ej: 5 1 10 4: ")
             }

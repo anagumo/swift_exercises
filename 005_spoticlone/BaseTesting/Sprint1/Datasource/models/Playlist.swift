@@ -18,7 +18,7 @@ enum PlayMode {
 }
 
 struct Playlist: PlaylistUpdatable {
-    var id: Int
+    var id: String
     var name: String
     var songs: [Song]
     let playMode: PlayMode
@@ -56,10 +56,10 @@ struct Playlist: PlaylistUpdatable {
     }
     
     func shuffle() -> [Song] {
-        play( .shuffle)
+        order( by: .shuffle)
     }
     
-    func play(_ playMode: PlayMode) -> [Song] {
+    func order(by playMode: PlayMode) -> [Song] {
         var orderedSongs: [Song] = []
         
         switch playMode {
