@@ -21,10 +21,10 @@ struct Player: PlayerTasks {
     private let songs = SongsLoader().songs
     private var djConfiguration = DJConfiguration(playlistMessage: "I love music more than I love people, ¡party is over!")
     private var playMode: PlayMode = .asc // Change the play mode manually
+    private let menu = Menu(options: [.Playlist, .Style, .Discovery, .Quit],
+                            styles: [.Custom, .ChillVibes, .PartyStarter, .RockAnthems, .EmotionalTrip, .EnergyBoost, .EightyLovers])
     
     mutating func open() {
-        let menu = Menu(options: [.Playlist, .Style, .Discovery, .Quit])
-        
         while true {
             print(menu.displayMainOptions())
             djConfiguration.option = djConfiguration.readOption(readLine())
@@ -33,7 +33,7 @@ struct Player: PlayerTasks {
             case .Playlist:
                 selectPlaylist()
             case .Style:
-                print("Select a style...")
+                selectStyle()
             case .Discovery:
                 print("Discover new music...")
             case .Quit:
@@ -50,25 +50,26 @@ struct Player: PlayerTasks {
             print("Select a playlist:")
             print(djConfiguration.displayPlaylists())
             // TODO: Validate user input
-            playPlaylist(id: readLine() ?? "") {
-                print("\(djConfiguration.playlistMessage)\n")
+            if let playlist = djConfiguration.getPlaylist(readLine() ?? "") {
+                // TODO: Implement play mode selection
+                play(songs: playlist.order(by: playMode), description: "\(playlist.name) - \(playlist.getCount())") {
+                    print("\(djConfiguration.playlistMessage)\n")
+                }
+            } else {
+                print("Playlist not found")
             }
         } else {
             createPlaylist()
         }
     }
     
-    private func playPlaylist(id: String, completionHandler: () -> ()) {
-        if let playlist = djConfiguration.getPlaylist(id) {
-            // TODO: Implement play mode selection
-            playlist.order(by: playMode).forEach { song in
-                print("Playing... \(song.getTitle())")
-                sleep(UInt32(djConfiguration.playInterval))
-            }
-            completionHandler()
-        } else {
-            print("Playlist not found")
+    func play(songs: [Song], description: String, completion: () -> ()) {
+        print("Playing songs from \(description)")
+        songs.forEach { song in
+            print("Playing... \(song.getTitle())")
+            sleep(UInt32(djConfiguration.playInterval))
         }
+        completion()
     }
     
     private mutating func createPlaylist() {
@@ -78,7 +79,6 @@ struct Player: PlayerTasks {
         // TODO: Validate if the playlist name exists
         var playlist = Playlist(id: "1", name: playlistName.isEmpty ? "untitled" : playlistName, songs: [])
         
-        // Display songs to be selected by the user
         print(displayAvailableSongs())
         
         while playlist.songs.isEmpty {
@@ -101,6 +101,29 @@ struct Player: PlayerTasks {
     private func displayAvailableSongs() -> String {
         songs.reduce("") {
             $0 + $1.getTitleEnumerated()
+        }
+    }
+    
+    private mutating func selectStyle() {
+        print(menu.displayStyleOptions())
+        
+        let inputAsInt = Int(readLine() ?? "") ?? -1
+        guard let styleType = StyleType(input: inputAsInt) else {
+            print("Enter a valid option:")
+            return
+        }
+        djConfiguration.style = DJStyle(name: styleType.rawValue, type: styleType, tags: styleType.tags)
+        
+        play(songs: filterSongs(by: styleType.tags), description: "\(styleType.rawValue)") {
+            print("\(djConfiguration.playlistMessage)\n")
+        }
+    }
+    
+    func filterSongs(by tags: Set<String>) -> [Song] {
+        songs.filter { song in
+            song.metadata.tags.contains { tag in
+                tags.contains(tag)
+            }
         }
     }
 }

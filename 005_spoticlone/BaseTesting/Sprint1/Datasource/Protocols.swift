@@ -21,7 +21,6 @@ protocol PlaylistTasks {
     func getCount() -> Int
     func shuffle() -> [Song]
     func order(by orderType: PlayMode) -> [Song]
-    func filter(by style: DJStyle) -> [Song]
 }
 
 protocol DJTasks {

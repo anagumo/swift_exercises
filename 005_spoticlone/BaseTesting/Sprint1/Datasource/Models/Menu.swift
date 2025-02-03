@@ -32,12 +32,22 @@ enum Option: String {
 
 struct Menu {
     let options: [Option]
+    let styles: [StyleType]
     
     func displayMainOptions() -> String {
         var textMenu = "🎧 Welcome to Spoticlone\n"
         // FIXME: Research how to use a reduce with an enumerated
         options.enumerated().forEach { index, option in
             textMenu = textMenu + "\(index) - \(option.rawValue)\n"
+        }
+        
+        return textMenu
+    }
+    
+    func displayStyleOptions() -> String {
+        var textMenu = "Select a style: \n"
+        styles.enumerated().forEach { index, style in
+            textMenu = textMenu + "\(index) - \(style.rawValue): \(style.description) \n"
         }
         
         return textMenu

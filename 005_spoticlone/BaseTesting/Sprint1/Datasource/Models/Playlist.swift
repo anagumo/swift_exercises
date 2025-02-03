@@ -86,10 +86,4 @@ struct Playlist: PlaylistTasks {
         
         return orderedSongs // Based on Dijstra I just use one return
     }
-    
-    func filter(by style: DJStyle) -> [Song] {
-        songs.filter {
-            Set($0.metadata.tags) == style.tags
-        }
-    }
 }
