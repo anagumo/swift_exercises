@@ -9,6 +9,7 @@ import Foundation
 
 struct Menu {
     let options: [Option]
+    let menuDelegate: MenuDelegate?
     
     /// Display movements that can be selected to play with the computer
     /// - returns: an string (`String`) that represent a list of movements
@@ -31,12 +32,11 @@ struct Menu {
     ///2 - Scissors
     ///3 - Quit
     ///```
-    func displayOptions() -> String {
+    func displayOptions() {
         var textMenu = "Select an option\n"
         for (index, option) in options.enumerated() {
             textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }
-        
-        return textMenu
+        menuDelegate?.displayMenu(textMenu: textMenu)
     }
 }

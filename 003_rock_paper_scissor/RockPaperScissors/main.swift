@@ -33,7 +33,7 @@ import Foundation
 ///Ganaste! Paper vence a Rock
 ///```
 func main() {
-    let game = Game()
+    var game = Game()
     game.play()
 }
 

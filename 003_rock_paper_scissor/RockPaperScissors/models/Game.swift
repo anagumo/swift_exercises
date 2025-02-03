@@ -7,18 +7,20 @@
 
 import Foundation
 
-struct Game {
-    private let menu: Menu = Menu(options: [.Rock, .Paper, .Scissors, .Quit])
+struct Game: GameTasks, MenuDelegate, PlayerDelegate, ScoreDelegate {
+    private var userPlayer = Player(type: .user, option: .Invalid)
+    private var computerPlayer = Player(type: .computer, option: .Invalid)
     
-    func play() {
-        var userPlayer = Player(type: .user, option: .Invalid)
-        var computerPlayer = Player(type: .computer, option: .Invalid)
-        var score = Score(type: .lost)
+    mutating func play() {
+        let menu: Menu = Menu(options: [.Rock, .Paper, .Scissors, .Quit], menuDelegate: self)
+        var score = Score(type: .lost, scoreDelegate: self)
         
         while true {
-            print(menu.displayOptions())
-            userPlayer.option = userPlayer.generateUserOption(readLine())
-            computerPlayer.option = computerPlayer.generateRandomOption()
+            menu.displayOptions()
+            userPlayer.playerDelegate = self
+            computerPlayer.playerDelegate = self
+            userPlayer.generateOption(readLine())
+            computerPlayer.generateRandomOption()
             
             guard userPlayer.continuePlaying else {
                 break
@@ -26,10 +28,26 @@ struct Game {
             
             if userPlayer.isValidOption {
                 score.evaluate(userOption: userPlayer.option, computerOption: computerPlayer.option)
-                print(score.display(userOption: userPlayer.option, computerOption: computerPlayer.option))
+                score.display(userOption: userPlayer.option, computerOption: computerPlayer.option)
             } else {
                 print("\nOpción inválida, selecciona una opción de la lista\n")
             }
         }
+    }
+    
+    func displayMenu(textMenu: String) {
+        print(textMenu)
+    }
+    
+    mutating func displayGeneratedOption(_ option: Option, playerType: PlayerType) {
+        if playerType == .user {
+            userPlayer.option = option
+        } else {
+            computerPlayer.option = option
+        }
+    }
+    
+    func displayScore(finalScore: String) {
+        print(finalScore)
     }
 }
