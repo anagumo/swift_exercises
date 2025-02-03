@@ -36,7 +36,7 @@ struct Menu: MenuTasks {
         var textMenu = "Select an option\n"
         
         guard !options.isEmpty else {
-            throw GameError.emptyMenu
+            throw GameError.EmptyMenu
         }
         
         for (index, option) in options.enumerated() {

@@ -8,14 +8,14 @@
 import Foundation
 
 enum GameError: Error {
-    case emptyMenu
+    case EmptyMenu
     case InvalidOption
     case Unknown
     
     var errorMessage: String {
         var errorMessage = ""
         switch self {
-        case .emptyMenu:
+        case .EmptyMenu:
             errorMessage = "\nEl menú requiere opciones para interactuar con el usuario"
         case .InvalidOption:
             errorMessage = "\nOpción inválida, selecciona una opción de la lista ej: 0\n"

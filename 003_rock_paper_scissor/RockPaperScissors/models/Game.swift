@@ -41,8 +41,8 @@ struct Game: GameTasks, MenuDelegate, ScoreDelegate {
                 }
                 
                 score?.evaluate(userOption: userPlayer.option, computerOption: computerPlayer.option)
-            } catch GameError.emptyMenu {
-                print(GameError.emptyMenu.errorMessage)
+            } catch GameError.EmptyMenu {
+                print(GameError.EmptyMenu.errorMessage)
                 break
             } catch GameError.InvalidOption {
                 print(GameError.InvalidOption.errorMessage)
