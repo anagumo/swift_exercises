@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct DJConfiguration: DJUpdatable {
+struct DJConfiguration: DJTasks {
     var option: Option = .Invalid
-    let playbackInterval: Int = 5
+    let playInterval: Int = 5
     let playlistMessage: String
     var playlists: [Playlist] = []
     let style: DJStyle? = nil
@@ -33,12 +33,12 @@ struct DJConfiguration: DJUpdatable {
         }
     }
     
-    mutating func add(playlist: Playlist, completionHandler: () -> ()) {
+    mutating func addPlaylist(_ playlist: Playlist, completionHandler: () -> ()) {
         playlists.append(playlist)
         completionHandler()
     }
     
-    func get(playlist id: String) -> Playlist? {
+    func getPlaylist(_ id: String) -> Playlist? {
         playlists.first {
             $0.id == id
         }

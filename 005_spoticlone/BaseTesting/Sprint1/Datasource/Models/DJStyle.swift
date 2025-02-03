@@ -35,12 +35,12 @@ enum StyleType: String {
     }
 }
 
-struct DJStyle: StyleUpdatable {
+struct DJStyle: StyleTasks {
     let type: StyleType
     let description: String
     var tags: Set<String>
     
-    mutating func add(tag: String) {
+    mutating func addTag(_ tag: String) {
         tags.insert(tag)
     }
 }

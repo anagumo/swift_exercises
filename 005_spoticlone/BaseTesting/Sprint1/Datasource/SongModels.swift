@@ -24,6 +24,14 @@ struct Song: Codable, Hashable {
     let basicInfo: BasicInfo
     let technicalInfo: TechnicalInfo
     let metadata: Metadata
+    
+    func getTitle() -> String {
+        basicInfo.title
+    }
+    
+    func getTitleEnumerated() -> String {
+        "\(id) - \(getTitle())\n"
+    }
 }
 
 // MARK: - BasicInfo

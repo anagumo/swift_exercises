@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Playlist: PlaylistUpdatable {
+struct Playlist: PlaylistTasks {
     var id: String
     var name: String
     var songs: [Song]
@@ -34,12 +34,12 @@ struct Playlist: PlaylistUpdatable {
         }
     }
     
-    func getCount() -> Int {
-        songs.count
-    }
-    
     mutating func deleteAll() {
         songs.removeAll()
+    }
+    
+    func getCount() -> Int {
+        songs.count
     }
     
     func shuffle() -> [Song] {

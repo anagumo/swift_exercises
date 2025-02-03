@@ -12,21 +12,24 @@ protocol PlayerTasks {
     mutating func selectPlaylist()
 }
 
-protocol PlaylistUpdatable {
+protocol PlaylistTasks {
     mutating func add(_ song: Song)
     mutating func add(contentsOf songs: [Song])
     mutating func delete(_ song: Song)
     mutating func delete(contentsOf songs: [Song])
-    func getCount() -> Int
     mutating func deleteAll()
+    func getCount() -> Int
     func shuffle() -> [Song]
     func order(by orderType: PlayMode) -> [Song]
+    func filter(by style: DJStyle) -> [Song]
 }
 
-protocol DJUpdatable {
-    mutating func add(playlist: Playlist, completionHandler: () -> ())
+protocol DJTasks {
+    func displayPlaylists() -> String
+    mutating func addPlaylist(_ playlist: Playlist, completionHandler: () -> ())
+    func getPlaylist(_ id: String) -> Playlist?
 }
 
-protocol StyleUpdatable {
-    mutating func add(tag: String)
+protocol StyleTasks {
+    mutating func addTag(_ tag: String)
 }

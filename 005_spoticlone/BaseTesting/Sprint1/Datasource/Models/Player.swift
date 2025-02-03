@@ -59,11 +59,11 @@ struct Player: PlayerTasks {
     }
     
     private func playPlaylist(id: String, completionHandler: () -> ()) {
-        if let playlist = djConfiguration.get(playlist: id) {
+        if let playlist = djConfiguration.getPlaylist(id) {
             // TODO: Implement play mode selection
             playlist.order(by: playMode).forEach { song in
-                print("Playing... \(song.basicInfo.title)")
-                sleep(UInt32(djConfiguration.playbackInterval))
+                print("Playing... \(song.getTitle())")
+                sleep(UInt32(djConfiguration.playInterval))
             }
             completionHandler()
         } else {
@@ -89,7 +89,7 @@ struct Player: PlayerTasks {
                 playlist.add(contentsOf: songs.filter {
                     songsInput.contains($0.id)
                 })
-                djConfiguration.add(playlist: playlist) {
+                djConfiguration.addPlaylist(playlist) {
                     print("Playlist \(playlist.name) created with \(playlist.getCount()) songs\n")
                 }
             } else {
@@ -100,7 +100,7 @@ struct Player: PlayerTasks {
     
     private func displayAvailableSongs() -> String {
         songs.reduce("") {
-            $0 + "\($1.id) - \($1.basicInfo.title)\n"
+            $0 + $1.getTitleEnumerated()
         }
     }
 }
