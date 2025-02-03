@@ -11,24 +11,23 @@ protocol GameTasks {
     mutating func play()
 }
 
+protocol MenuTasks {
+    func getMenu()
+}
+
 protocol MenuDelegate {
-    func displayMenu(textMenu: String)
+    func displayMenu(_ menu: String)
 }
 
 protocol PlayerTasks {
-    mutating func generateOption(_ inputText: String?)
-    mutating func generateRandomOption()
-}
-
-protocol PlayerDelegate {
-    mutating func displayGeneratedOption(_ option: Option, playerType: PlayerType)
+    mutating func generateOption(_ inputText: String?) -> Option
+    mutating func generateRandomOption() -> Option
 }
 
 protocol ScoreTasks {
     mutating func evaluate(userOption: Option, computerOption: Option)
-    func display(userOption: Option, computerOption: Option)
 }
 
 protocol ScoreDelegate {
-    func displayScore(finalScore: String)
+    func displayScore(_ score: String)
 }

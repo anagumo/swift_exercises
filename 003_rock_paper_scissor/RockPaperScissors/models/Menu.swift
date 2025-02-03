@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Menu {
+struct Menu: MenuTasks {
     let options: [Option]
     let menuDelegate: MenuDelegate?
     
@@ -32,11 +32,11 @@ struct Menu {
     ///2 - Scissors
     ///3 - Quit
     ///```
-    func displayOptions() {
+    func getMenu() {
         var textMenu = "Select an option\n"
         for (index, option) in options.enumerated() {
             textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }
-        menuDelegate?.displayMenu(textMenu: textMenu)
+        menuDelegate?.displayMenu(textMenu)
     }
 }

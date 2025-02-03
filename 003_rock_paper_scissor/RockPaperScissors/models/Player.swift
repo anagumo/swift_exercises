@@ -15,7 +15,6 @@ enum PlayerType {
 struct Player: PlayerTasks {
     let type: PlayerType
     var option: Option
-    var playerDelegate: PlayerDelegate?
     
     var continuePlaying: Bool {
         type == .user && option != .Quit
@@ -44,14 +43,13 @@ struct Player: PlayerTasks {
     ///```
     ///Optional(RockPaperScissors.Option.Paper)
     ///```
-    mutating func generateOption(_ inputText: String?) {
+    mutating func generateOption(_ inputText: String?) -> Option {
         let inputAsInt = Int(inputText ?? "") ?? -1
         guard let option = Option(input: inputAsInt) else {
-            playerDelegate?.displayGeneratedOption(.Invalid, playerType: .user)
-            return
+            return .Invalid
         }
         
-        playerDelegate?.displayGeneratedOption(option, playerType: .user)
+        return option
     }
 
     /// Generate a random option for computer
@@ -71,15 +69,14 @@ struct Player: PlayerTasks {
     ///```
     ///Optional(RockPaperScissors.Option.Scissors)
     ///```
-    mutating func generateRandomOption() {
+    mutating func generateRandomOption() -> Option {
         let randomElement = (0...2).randomElement()
         
         guard let randomElement,
               let randomOption = Option(input: randomElement) else {
-            playerDelegate?.displayGeneratedOption(.Invalid, playerType: .computer)
-            return
+            return .Invalid
         }
         
-        playerDelegate?.displayGeneratedOption(randomOption, playerType: .computer)
+        return randomOption
     }
 }

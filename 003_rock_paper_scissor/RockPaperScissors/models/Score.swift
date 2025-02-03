@@ -24,9 +24,12 @@ struct Score: ScoreTasks {
         default:
             type = .lost
         }
+        
+        let finalScore = getFinalScore(userOption, computerOption)
+        scoreDelegate?.displayScore(finalScore)
     }
     
-    func display(userOption: Option, computerOption: Option) {
+    private func getFinalScore(_ userOption: Option, _ computerOption: Option) -> String {
         var finalScore = "Has elegido \(userOption.rawValue)\nEl ordenador ha elegido \(computerOption.rawValue)\n"
         
         switch type {
@@ -38,6 +41,6 @@ struct Score: ScoreTasks {
             finalScore = finalScore + "Es un empate!\n"
         }
         
-        scoreDelegate?.displayScore(finalScore: finalScore)
+        return finalScore
     }
 }
