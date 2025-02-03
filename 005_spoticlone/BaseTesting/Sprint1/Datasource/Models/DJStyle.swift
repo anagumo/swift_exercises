@@ -86,7 +86,6 @@ enum StyleType: String {
 }
 
 struct DJStyle {
-    let name: String
     let type: StyleType
     var tags: Set<String>
     

@@ -35,6 +35,7 @@ struct Player: PlayerTasks {
             case .Style:
                 selectStyle()
             case .Discovery:
+                // TODO: Implement discovery music
                 print("Discover new music...")
             case .Quit:
                 print("See you soon!...\n")
@@ -112,9 +113,18 @@ struct Player: PlayerTasks {
             print("Enter a valid option:")
             return
         }
-        djConfiguration.style = DJStyle(name: styleType.rawValue, type: styleType, tags: styleType.tags)
         
-        play(songs: filterSongs(by: styleType.tags), description: "\(styleType.rawValue)") {
+        var tags = Set<String>()
+        if styleType == .Custom {
+            let tagsInput = readLine()?.components(separatedBy: .whitespaces)
+            tags = Set(tagsInput ?? [])
+        } else {
+            tags = styleType.tags
+        }
+        
+        djConfiguration.style = DJStyle(type: styleType, tags: tags)
+        
+        play(songs: filterSongs(by: tags), description: "\(styleType.rawValue)") {
             print("\(djConfiguration.playlistMessage)\n")
         }
     }
