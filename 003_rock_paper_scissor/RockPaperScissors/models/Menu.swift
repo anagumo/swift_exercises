@@ -32,8 +32,13 @@ struct Menu: MenuTasks {
     ///2 - Scissors
     ///3 - Quit
     ///```
-    func getMenu() {
+    func getMenu() throws {
         var textMenu = "Select an option\n"
+        
+        guard !options.isEmpty else {
+            throw GameError.emptyMenu
+        }
+        
         for (index, option) in options.enumerated() {
             textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }

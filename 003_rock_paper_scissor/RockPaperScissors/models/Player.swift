@@ -20,10 +20,6 @@ struct Player: PlayerTasks {
         type == .user && option != .Quit
     }
     
-    var isValidOption: Bool {
-        type == .user && option != .Invalid
-    }
-    
     /// Handle user input
     /// - parameters:
     ///     - inputText:  the text of type  (`String`) that user writes as input
@@ -78,5 +74,11 @@ struct Player: PlayerTasks {
         }
         
         return randomOption
+    }
+    
+    func isValidOption() throws {
+        guard type == .user && option != .Invalid else {
+            throw GameError.InvalidOption
+        }
     }
 }

@@ -28,18 +28,26 @@ struct Game: GameTasks, MenuDelegate, ScoreDelegate {
         score = Score(type: .lost, scoreDelegate: self)
         
         while true {
-            menu?.getMenu()
-            userPlayer.option = userPlayer.generateOption(readLine())
-            computerPlayer.option = computerPlayer.generateRandomOption()
-            
-            guard userPlayer.continuePlaying else {
-                break
-            }
-            
-            if userPlayer.isValidOption {
+            do {
+                try menu?.getMenu()
+                
+                userPlayer.option = userPlayer.generateOption(readLine())
+                computerPlayer.option = computerPlayer.generateRandomOption()
+                
+                try userPlayer.isValidOption()
+                
+                guard userPlayer.continuePlaying else {
+                    break
+                }
+                
                 score?.evaluate(userOption: userPlayer.option, computerOption: computerPlayer.option)
-            } else {
-                print("\nOpción inválida, selecciona una opción de la lista\n")
+            } catch GameError.emptyMenu {
+                print(GameError.emptyMenu.errorMessage)
+                break
+            } catch GameError.InvalidOption {
+                print(GameError.InvalidOption.errorMessage)
+            } catch {
+                print(GameError.Unknown.errorMessage)
             }
         }
     }

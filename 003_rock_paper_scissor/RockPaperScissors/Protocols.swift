@@ -12,7 +12,7 @@ protocol GameTasks {
 }
 
 protocol MenuTasks {
-    func getMenu()
+    func getMenu() throws
 }
 
 protocol MenuDelegate {
@@ -22,6 +22,7 @@ protocol MenuDelegate {
 protocol PlayerTasks {
     mutating func generateOption(_ inputText: String?) -> Option
     mutating func generateRandomOption() -> Option
+    func isValidOption() throws
 }
 
 protocol ScoreTasks {
