@@ -35,7 +35,8 @@ struct Menu {
     
     func displayMainOptions() -> String {
         var textMenu = "🎧 Welcome to Spoticlone\n"
-        for (index, option) in options.enumerated() {
+        // FIXME: Research how to use a reduce with an enumerated
+        options.enumerated().forEach { index, option in
             textMenu = textMenu + "\(index) - \(option.rawValue)\n"
         }
         

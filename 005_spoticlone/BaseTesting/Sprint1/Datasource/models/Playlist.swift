@@ -27,9 +27,8 @@ struct Playlist: PlaylistUpdatable {
         songs.append(song)
     }
     
-    mutating func add(contentsOf songs: [Song]) -> [Song] {
+    mutating func add(contentsOf songs: [Song]) {
         self.songs.append(contentsOf: songs)
-        return songs.reversed()
     }
     
     mutating func delete(_ song: Song) -> [Song] {

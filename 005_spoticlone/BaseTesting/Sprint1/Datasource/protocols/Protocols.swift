@@ -9,7 +9,7 @@ import Foundation
 
 protocol PlaylistUpdatable {
     mutating func add(_ song: Song)
-    mutating func add(contentsOf songs: [Song]) -> [Song]
+    mutating func add(contentsOf songs: [Song])
     mutating func delete(_ song: Song) -> [Song]
     mutating func delete(contentsOf songs: [Song]) -> [Song]
     func getCount() -> Int

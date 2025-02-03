@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct Player {
+protocol PlayerTasks {
+    mutating func open()
+    mutating func selectPlaylist()
+}
+
+struct Player: PlayerTasks {
     let songs = SongsLoader().songs
     var djConfiguration = DJConfiguration(playlistMessage: "Amo la música más de lo que amo a la gente")
     
@@ -20,7 +25,7 @@ struct Player {
             
             switch djConfiguration.option {
             case .Playlist:
-                createPlaylist()
+                selectPlaylist()
             case .Style:
                 print("Select a style...")
             case .Discovery:
@@ -34,41 +39,43 @@ struct Player {
         }
     }
     
-    mutating func createPlaylist() {
-        if djConfiguration.playlists.isEmpty {
-            print("Enter a name for your playlist: ")
-            let playlistName = readLine() ?? ""
-            
-            // TODO: Validate if the playlist name exist
-            var playlist = Playlist(id: 1, name: playlistName.isEmpty ? "untitled" : playlistName, songs: [], playMode: .asc)
-            
-            // Display songs to be selected by the user
-            songs.forEach { song in
-                print("\(song.id) - \(song.basicInfo.title)")
-            }
-            
-            while playlist.songs.isEmpty {
-                print("Select songs to add, ej: 5 1 10 4: ")
-                let selectedSongs = readLine()?.components(separatedBy: .whitespaces)
-                
-                if let selectedSongs {
-                    selectedSongs.forEach { selectedSong in
-                        songs.forEach { song in
-                            if song.id == selectedSong {
-                                playlist.add(song)
-                            }
-                        }
-                    }
-                    djConfiguration.add(playlist: playlist)
-                } else {
-                    print("Select songs to add, ej: 5 1 10 4: ")
-                }
-            }
-        } else {
+    mutating func selectPlaylist() {
+        if djConfiguration.hasPlaylists() {
             // TODO: Select a playlist
-            djConfiguration.playlists.forEach { playlist in
-                print("\(playlist.id) - \(playlist.name)")
+            print(djConfiguration.displayPlaylists())
+        } else {
+            createPlaylist()
+        }
+    }
+    
+    private mutating func createPlaylist() {
+        print("Enter a name for your playlist: ")
+        let playlistName = readLine() ?? ""
+        
+        // TODO: Validate if the playlist name exists
+        var playlist = Playlist(id: 1, name: playlistName.isEmpty ? "untitled" : playlistName, songs: [], playMode: .asc)
+        
+        // Display songs to be selected by the user
+        print(displayAvailableSongs())
+        
+        while playlist.songs.isEmpty {
+            print("Select songs to add, ej: 5 1 10 4: ")
+            let songsInput = readLine()?.components(separatedBy: .whitespaces)
+            
+            if let songsInput {
+                playlist.add(contentsOf: songs.filter {
+                    songsInput.contains($0.id)
+                })
+                djConfiguration.add(playlist: playlist)
+            } else {
+                print("Select songs to add, ej: 5 1 10 4: ")
             }
+        }
+    }
+    
+    private func displayAvailableSongs() -> String {
+        songs.reduce("") {
+            $0 + "\($1.id) - \($1.basicInfo.title)\n"
         }
     }
 }

@@ -23,6 +23,16 @@ struct DJConfiguration: DJUpdatable {
         return option
     }
     
+    func hasPlaylists() -> Bool {
+        !playlists.isEmpty
+    }
+    
+    func displayPlaylists() -> String {
+        playlists.reduce("") {
+            $0 + "\($1.id) - \($1.name)\n"
+        }
+    }
+    
     mutating func add(playlist: Playlist) {
         playlists.append(playlist)
     }
