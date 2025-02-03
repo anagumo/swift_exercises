@@ -13,10 +13,10 @@ struct Game: GameTasks, MenuDelegate, ScoreDelegate {
     private var computerPlayer: Player
     private var score: Score?
     
-    init(menu: Menu? = nil,
+    init(menu: Menu? = nil, // I set nil because I need to set self as delegate
          userPlayer: Player = Player(type: .user, option: .Invalid),
          computerPlayer: Player = Player(type: .computer, option: .Invalid),
-         score: Score? = nil) {
+         score: Score? = nil) { // I set nil because I need to set self as delegate
         self.menu = menu
         self.userPlayer = userPlayer
         self.computerPlayer = computerPlayer
@@ -44,6 +44,7 @@ struct Game: GameTasks, MenuDelegate, ScoreDelegate {
         }
     }
     
+    // MARK: Responsabilities delegated by Menu and Score entities
     func displayMenu(_ menu: String) {
         print(menu)
     }
