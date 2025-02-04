@@ -33,15 +33,15 @@ struct Menu: MenuTasks {
     ///3 - Quit
     ///```
     func getMenu() throws {
-        var textMenu = "Select an option\n"
-        
         guard !options.isEmpty else {
             throw GameError.EmptyMenu
         }
         
-        for (index, option) in options.enumerated() {
-            textMenu = textMenu + "\(index) - \(option.rawValue)\n"
+        let textMenu = options.enumerated().reduce("Select an option\n") {
+            let (index, option) = $1
+            return $0 + "\(index) - \(option.rawValue)\n"
         }
+        
         menuDelegate?.displayMenu(textMenu)
     }
 }
