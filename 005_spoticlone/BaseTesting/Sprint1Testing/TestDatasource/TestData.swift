@@ -77,7 +77,7 @@ struct TestData {
       "metadata": {
         "tags": ["summer", "chill", "pop"],
         "language": "en",
-        "popularity": 88
+        "popularity": 100
       }
     },
     {
@@ -122,6 +122,28 @@ struct TestData {
         "tags": ["pride", "anthem", "confidence"],
         "language": "en",
         "popularity": 94
+      }
+    },
+    {
+      "id": "6",
+      "basicInfo": {
+        "title": "Untitled",
+        "artist": "Dua Lipa",
+        "duration_ms": 203000,
+        "genre": "Pop",
+        "album": "Future Nostalgia",
+        "releaseDate": "2020-03-27",
+        "isExplicit": false
+      },
+      "technicalInfo": {
+        "bpm": 103,
+        "key": "A",
+        "isrc": "GBUM72001564"
+      },
+      "metadata": {
+        "tags": ["disco", "dance", "summer"],
+        "language": "en",
+        "popularity": 90
       }
     }]
 }

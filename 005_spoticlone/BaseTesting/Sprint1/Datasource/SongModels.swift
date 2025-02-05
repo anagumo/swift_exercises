@@ -32,6 +32,18 @@ struct Song: Codable, Hashable {
     func getTitleEnumerated() -> String {
         "\(id) - \(getTitle())\n"
     }
+    
+    func isBy(artist: String) -> Bool {
+        basicInfo.artist.lowercased() == artist.lowercased()
+    }
+    
+    func isGreaterThan(minutes: Int) -> Bool {
+        ((basicInfo.durationMs / 1000) / 60) >= minutes
+    }
+    
+    func toMinutes() -> Double {
+        Double((basicInfo.durationMs / 1000) / 60)
+    }
 }
 
 // MARK: - BasicInfo
