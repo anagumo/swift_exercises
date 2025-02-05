@@ -107,7 +107,7 @@ class Sprint1Testing {
     }
     
     @Suite("DJ Styles")
-    class DJStyleTests {
+    class DJConfigurationTests {
         var testData: Data?
         var songsLoader: SongsLoader?
         
