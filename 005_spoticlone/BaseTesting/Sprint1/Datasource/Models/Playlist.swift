@@ -61,19 +61,13 @@ struct Playlist: PlaylistTasks {
                 $0.basicInfo.releaseDate > $1.basicInfo.releaseDate
             }
         case .tonality:
-            var tonalities: [String: [Song]] = [:]
-            songs.forEach { song in
-                if var oldSongs = tonalities[song.technicalInfo.key] {
-                    oldSongs.append(song)
-                    tonalities[song.technicalInfo.key] = oldSongs
-                } else {
-                    tonalities[song.technicalInfo.key] = []
-                }
+            orderedSongs = songs.sorted {
+                let tonalityKey0 = TonalityKey(from: $0.technicalInfo.key) ?? .Unknown
+                let tonalityKey1 = TonalityKey(from: $1.technicalInfo.key) ?? .Unknown
+                return tonalityKey0.rawValue < tonalityKey1.rawValue
             }
             
-            tonalities.forEach { tonality in
-                orderedSongs.append(contentsOf: tonality.value)
-            } // TODO: Sort by C to A
+            return orderedSongs
         case .popularity:
             orderedSongs = songs.sorted {
                 $0.metadata.popularity > $1.metadata.popularity
@@ -85,5 +79,67 @@ struct Playlist: PlaylistTasks {
         }
         
         return orderedSongs // Based on Dijstra I just use one return
+    }
+}
+
+enum TonalityKey: Int {
+    case C = 1 // If we set just the start number Swift does the rest :hands:
+    case CSharp
+    case Db
+    case D
+    case DSharp
+    case Eb
+    case E
+    case F
+    case FSharp
+    case Gb
+    case G
+    case GSharp
+    case Ab
+    case A
+    case ASharp
+    case Bb
+    case B
+    case Unknown // Better as default
+    
+    init?(from songKey: String) {
+        switch songKey {
+        case "C":
+            self = .C
+        case "C#":
+            self = .CSharp
+        case "Db":
+            self = .Db
+        case "D":
+            self = .D
+        case "D#":
+            self = .DSharp
+        case "Eb":
+            self = .Eb
+        case "E":
+            self = .E
+        case "F":
+            self = .F
+        case "F#":
+            self = .FSharp
+        case "Gb":
+            self = .Gb
+        case "G":
+            self = .G
+        case "G#":
+            self = .GSharp
+        case "Ab":
+            self = .Ab
+        case "A":
+            self = .A
+        case "A#":
+            self = .ASharp
+        case "Bb":
+            self = .Bb
+        case "B":
+            self = .B
+        default:
+            return nil
+        }
     }
 }
