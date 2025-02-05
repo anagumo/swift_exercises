@@ -4,77 +4,77 @@ import Foundation
 class Sprint1Testing {
     
     @Suite("Search and filter")
-        class SearchAndFilterTests {
-            var testData: Data?
-            var songsLoader: SongsLoader?
-            
-            init() {
-                testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
-                songsLoader = SongsLoader(fromData: testData)
-            }
-            
-            deinit {
-                testData = nil
-                songsLoader = nil
-            }
-            
-            @Test func filterByArtist() async throws {
-                #expect(songsLoader?.filterByArtist("Justin Bieber").count == 1,
-                        "Se espera que al menos haya una canción de Justin Bieber")
-            }
-            
-            @Test func filterByDuration() async throws {
-                #expect(songsLoader?.filterByDuration(minutes: 3).count == 6,
-                        "Se espera que todas las canciones duren más de 3 minutos")
-            }
+    class SearchAndFilterTests {
+        var testData: Data?
+        var songsLoader: SongsLoader?
+        
+        init() {
+            testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
+            songsLoader = SongsLoader(fromData: testData)
         }
         
-        @Suite("Calculations and Statistics")
-        class CalculationAndTests {
-            var testData: Data?
-            var songsLoader: SongsLoader?
-            
-            init() {
-                testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
-                songsLoader = SongsLoader(fromData: testData)
-            }
-            
-            deinit {
-                testData = nil
-                songsLoader = nil
-            }
-            
-            @Test func getTotalDuration() async throws {
-                #expect(songsLoader?.getTotalDuration() ?? 0 > 17,
-                        "Se espera que el total de duración sea mayor que 17 minutos")
-            }
-            
-            @Test func getAlbumWithMoreSongs() async throws {
-                #expect(songsLoader?.getAlbumWithMoreSongs() ?? ("", 0) == ("Future Nostalgia", 2),
-                        "Se espera que el album con más canciones sea de Dua Lipa")
-            }
+        deinit {
+            testData = nil
+            songsLoader = nil
         }
         
-        @Suite("Complex validations")
-        class ComplexValidationsTests {
-            var testData: Data?
-            var songsLoader: SongsLoader?
-            
-            init() {
-                testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
-                songsLoader = SongsLoader(fromData: testData)
-            }
-            
-            deinit {
-                testData = nil
-                songsLoader = nil
-            }
-            
-            @Test func validateTonalities() async throws {
-                #expect(songsLoader?.validateTonalities().count == 13,
-                        "Se espera que arroje 13 tonalidades faltantes: C#, Db, D#, Eb, E, F, Gb, G, G#, Ab, A#, Bb, B")
-            }
+        @Test func filterByArtist() async throws {
+            #expect(songsLoader?.filterByArtist("Justin Bieber").count == 1,
+                    "Se espera que al menos haya una canción de Justin Bieber")
         }
+        
+        @Test func filterByDuration() async throws {
+            #expect(songsLoader?.filterByDuration(minutes: 3).count == 6,
+                    "Se espera que todas las canciones duren más de 3 minutos")
+        }
+    }
+    
+    @Suite("Calculations and Statistics")
+    class CalculationAndTests {
+        var testData: Data?
+        var songsLoader: SongsLoader?
+        
+        init() {
+            testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
+            songsLoader = SongsLoader(fromData: testData)
+        }
+        
+        deinit {
+            testData = nil
+            songsLoader = nil
+        }
+        
+        @Test func getTotalDuration() async throws {
+            #expect(songsLoader?.getTotalDuration() ?? 0 > 17,
+                    "Se espera que el total de duración sea mayor que 17 minutos")
+        }
+        
+        @Test func getAlbumWithMoreSongs() async throws {
+            #expect(songsLoader?.getAlbumWithMoreSongs() ?? ("", 0) == ("Future Nostalgia", 2),
+                    "Se espera que el album con más canciones sea de Dua Lipa")
+        }
+    }
+    
+    @Suite("Complex validations")
+    class ComplexValidationsTests {
+        var testData: Data?
+        var songsLoader: SongsLoader?
+        
+        init() {
+            testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
+            songsLoader = SongsLoader(fromData: testData)
+        }
+        
+        deinit {
+            testData = nil
+            songsLoader = nil
+        }
+        
+        @Test func validateTonalities() async throws {
+            #expect(songsLoader?.validateTonalities().count == 13,
+                    "Se espera que arroje 13 tonalidades faltantes: C#, Db, D#, Eb, E, F, Gb, G, G#, Ab, A#, Bb, B")
+        }
+    }
     
     @Suite("Playlist")
     class PlaylistTests {
