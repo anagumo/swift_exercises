@@ -143,6 +143,14 @@ class SongsLoader {
         songs.reversed()
     }
     
+    func orderByTonality() -> [Song] {
+        songs.sorted {
+            let tonalityKey0 = TonalityKey(from: $0.technicalInfo.key) ?? .Unknown
+            let tonalityKey1 = TonalityKey(from: $1.technicalInfo.key) ?? .Unknown
+            return tonalityKey0.rawValue < tonalityKey1.rawValue
+        }
+    }
+    
     // MARK: DJ Styles
     func filterBy(tag: String) -> [Song] {
         songs.filter { song in
@@ -155,6 +163,69 @@ class SongsLoader {
             song.metadata.tags.contains { tag in
                 tags.contains(tag)
             }
+        }
+    }
+}
+
+// I coded the enum here for Testing propuse
+enum TonalityKey: Int {
+    case C = 1 // If we set just the start number Swift does the rest :hands:
+    case CSharp
+    case Db
+    case D
+    case DSharp
+    case Eb
+    case E
+    case F
+    case FSharp
+    case Gb
+    case G
+    case GSharp
+    case Ab
+    case A
+    case ASharp
+    case Bb
+    case B
+    case Unknown // Better as default
+    
+    init?(from songKey: String) {
+        switch songKey {
+        case "C":
+            self = .C
+        case "C#":
+            self = .CSharp
+        case "Db":
+            self = .Db
+        case "D":
+            self = .D
+        case "D#":
+            self = .DSharp
+        case "Eb":
+            self = .Eb
+        case "E":
+            self = .E
+        case "F":
+            self = .F
+        case "F#":
+            self = .FSharp
+        case "Gb":
+            self = .Gb
+        case "G":
+            self = .G
+        case "G#":
+            self = .GSharp
+        case "Ab":
+            self = .Ab
+        case "A":
+            self = .A
+        case "A#":
+            self = .ASharp
+        case "Bb":
+            self = .Bb
+        case "B":
+            self = .B
+        default:
+            return nil
         }
     }
 }

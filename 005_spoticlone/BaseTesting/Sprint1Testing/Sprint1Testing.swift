@@ -104,6 +104,11 @@ class Sprint1Testing {
             let firstSong = songsLoader?.orderByDescending().first?.getTitle()
             #expect(firstSong == "Untitled", "Se espera que la canción sea la última de la lista en orden ascendente")
         }
+        
+        @Test func orderSongsByTonality() async throws {
+            let firstTonality = songsLoader?.orderByTonality().first?.getTitle()
+            #expect(firstTonality == "Industry Baby", "Se espera que la canción con la tonalidad más alta sea de Lil Nas X")
+        }
     }
     
     @Suite("DJ Styles")
