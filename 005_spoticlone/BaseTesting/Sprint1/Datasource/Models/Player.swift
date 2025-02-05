@@ -21,7 +21,7 @@ struct Player: PlayerTasks {
     private let songs = SongsLoader().songs
     private var djConfiguration = DJConfiguration(playlistMessage: "I love music more than I love people, ¡party is over!")
     private var playMode: PlayMode = .asc // Change the play mode manually
-    private let menu = Menu(options: [.Playlist, .Style, .Discovery, .Quit],
+    private let menu = Menu(options: [.Playlist, .Style, .Discover, .Quit],
                             styles: [.Custom, .ChillVibes, .PartyStarter, .RockAnthems, .EmotionalTrip, .EnergyBoost, .EightyLovers])
     
     mutating func open() {
@@ -34,9 +34,8 @@ struct Player: PlayerTasks {
                 selectPlaylist()
             case .Style:
                 selectStyle()
-            case .Discovery:
-                // TODO: Implement discovery music
-                print("Discover new music...")
+            case .Discover:
+                selectDiscover()
             case .Quit:
                 print("See you soon!...\n")
                 return
@@ -44,6 +43,15 @@ struct Player: PlayerTasks {
                 print("Invalid option\n")
             }
         }
+    }
+    
+    func play(songs: [Song], description: String, completion: () -> ()) {
+        print("Playing songs from \(description)")
+        songs.forEach { song in
+            print("Playing... \(song.getTitle())")
+            sleep(UInt32(djConfiguration.playInterval))
+        }
+        completion()
     }
     
     mutating func selectPlaylist() {
@@ -62,15 +70,6 @@ struct Player: PlayerTasks {
         } else {
             createPlaylist()
         }
-    }
-    
-    func play(songs: [Song], description: String, completion: () -> ()) {
-        print("Playing songs from \(description)")
-        songs.forEach { song in
-            print("Playing... \(song.getTitle())")
-            sleep(UInt32(djConfiguration.playInterval))
-        }
-        completion()
     }
     
     private mutating func createPlaylist() {
@@ -96,12 +95,6 @@ struct Player: PlayerTasks {
             } else {
                 print("Select songs to add, ej: 5 1 10 4: ")
             }
-        }
-    }
-    
-    private func displayAvailableSongs() -> String {
-        songs.reduce("") {
-            $0 + $1.getTitleEnumerated()
         }
     }
     
@@ -135,6 +128,35 @@ struct Player: PlayerTasks {
             song.metadata.tags.contains { tag in
                 tags.contains(tag)
             }
+        }
+    }
+    
+    private func selectDiscover() {
+        var filteredSongs: [Song] = []
+        let predicate: (Int) -> Bool = { $0 != 2 }
+        print(displayAvailableSongs())
+        print("Select songs to match, ej: 5 1: ")
+        
+        while predicate(filteredSongs.count) {
+            let songsInput = readLine()?.components(separatedBy: .whitespaces) ?? []
+            
+            filteredSongs = songs.filter { song in
+                songsInput.contains(song.id)
+            }
+            
+            if predicate(filteredSongs.count) {
+                print("You must select at least 2 songs, ej: 5 1: ")
+            } else {
+                var discover = Discover(firstSong: filteredSongs.first, secondSong: filteredSongs.last)
+                discover.calculateMatchingPoints()
+                print(discover.displayMatchingPoints())
+            }
+        }
+    }
+    
+    private func displayAvailableSongs() -> String {
+        songs.reduce("") {
+            $0 + $1.getTitleEnumerated()
         }
     }
 }

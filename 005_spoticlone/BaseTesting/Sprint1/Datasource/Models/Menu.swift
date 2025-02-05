@@ -10,7 +10,7 @@ import Foundation
 enum Option: String {
     case Playlist = "Select a playlist"
     case Style = "Select a style"
-    case Discovery = "Discover new music"
+    case Discover = "Discover new music"
     case Quit = "Quit player"
     case Invalid
     
@@ -21,7 +21,7 @@ enum Option: String {
         case 1:
             self = .Style
         case 2:
-            self = .Discovery
+            self = .Discover
         case 3:
             self = .Quit
         default:

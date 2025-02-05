@@ -7,18 +7,31 @@
 
 import Foundation
 
+// To practice and play with optionals
 struct Discover {
-    let firstSong: Song
-    let secondSong: Song
+    let firstSong: Song?
+    let secondSong: Song?
+    var matchingPoints: Double
     
-    func getMatchingPoints() -> Double {
-        var matchingPoints: Double = 0
+    init(firstSong: Song?, secondSong: Song?, matchingPoints: Double = 0) {
+        self.firstSong = firstSong
+        self.secondSong = secondSong
+        self.matchingPoints = matchingPoints
+    }
+    
+    mutating func calculateMatchingPoints() {
         matchingPoints = matchingPoints + getGenreMatching()
         matchingPoints = matchingPoints + getBPMMatching()
         matchingPoints = matchingPoints + getTagsMatching()
         matchingPoints = matchingPoints + getTonalityMatching()
         matchingPoints = matchingPoints + getPopularityMatching()
-        return matchingPoints
+    }
+    
+    func displayMatchingPoints() -> String {
+        guard let firstTitle = firstSong?.getTitle(), let secondTitle = secondSong?.getTitle() else {
+            return "Unknown percentage"
+        }
+        return "The matching percentage between \(firstTitle) and \(secondTitle) is: \(matchingPoints)%\n"
     }
     
     func getGenreMatching() -> Double {
@@ -40,10 +53,9 @@ struct Discover {
             "Disco": ["Dance-Pop", "Soul"],
             "Soundtrack": ["Orchestral", "Pop", "Rock"]
         ]
-        
-        let firstGenre = firstSong.basicInfo.genre
-        let secondGenre = secondSong.basicInfo.genre
-        var matchingPoints: Double = 0
+        let firstGenre = firstSong?.basicInfo.genre ?? ""
+        let secondGenre = secondSong?.basicInfo.genre ?? ""
+        var matchingPoints = Double.zero
         
         guard firstGenre != secondGenre else {
             matchingPoints = 25
@@ -62,8 +74,8 @@ struct Discover {
     }
     
     func getBPMMatching() -> Double {
-        let subtractedBPM = abs(firstSong.technicalInfo.bpm - secondSong.technicalInfo.bpm)
-        var matchingPoints: Double = 0
+        let subtractedBPM = abs((firstSong?.technicalInfo.bpm ?? Int.zero) - (secondSong?.technicalInfo.bpm ?? Int.zero))
+        var matchingPoints = Double.zero
         
         switch subtractedBPM {
         case subtractedBPM where subtractedBPM < 10:
@@ -75,21 +87,19 @@ struct Discover {
         case subtractedBPM where 30...39 ~= subtractedBPM:
             matchingPoints = 5
         default:
-            matchingPoints = 0
+            return matchingPoints
         }
         
         return matchingPoints
     }
     
     func getTagsMatching() -> Double {
-        var commonTags: Double = 0
+        var commonTags = Double.zero
         let maxTags: Double = 3
-        let calculateMatchingPoints: (Double, Double) -> Double = {
-            ($0 / $1) * 30
-        }
+        let calculateMatchingPoints: (Double, Double) -> Double = { ($0 / $1) * 30 } // To practice with closures
         
-        firstSong.metadata.tags.forEach { tag in
-            guard secondSong.metadata.tags.contains(tag) else {
+        firstSong?.metadata.tags.forEach { tag in
+            guard let tags = secondSong?.metadata.tags.contains(tag), tags else {
                 return
             }
             commonTags = commonTags + 1
@@ -119,9 +129,9 @@ struct Discover {
             "B": ["F#", "E", "G#m"]
         ]
         
-        let firstKey = firstSong.technicalInfo.key
-        let secondKey = secondSong.technicalInfo.key
-        var matchingPoints: Double = 0
+        let firstKey = firstSong?.technicalInfo.key ?? ""
+        let secondKey = secondSong?.technicalInfo.key ?? ""
+        var matchingPoints = Double.zero
         
         guard firstKey != secondKey else {
             matchingPoints = 15
@@ -139,7 +149,7 @@ struct Discover {
     }
     
     func getPopularityMatching() -> Double {
-        let subtractedPopularity = abs(firstSong.metadata.popularity - secondSong.metadata.popularity)
+        let subtractedPopularity = abs((firstSong?.metadata.popularity ?? Int.zero) - (secondSong?.metadata.popularity ?? Int.zero))
         let calculateMatchingPoints: (Int) -> Double = {
             10 * (1 - (Double($0) / 100))
         }
