@@ -136,4 +136,54 @@ class Sprint1Testing {
                     "Se espera que tengamos 4 canciones con ese estilo de DJ")
         }
     }
+    
+    @Suite("Discover Music")
+    class DiscoverMusic {
+        var testData: Data?
+        var firstSong: Song?
+        var secondSong: Song?
+        var discoverTasks: DiscoverTasks = Discover() // I set the protocol to know what happen
+        
+        init() {
+            testData = TestData.getFiveSongs() ?? "".data(using: .utf8)!
+            firstSong = SongsLoader(fromData: testData).songs.first
+            secondSong = SongsLoader(fromData: testData).songs.last
+        }
+        
+        deinit {
+            testData = nil
+            firstSong = nil
+            secondSong = nil
+        }
+        
+        @Test func getGenreMatching() async throws {
+            #expect(discoverTasks.getGenreMatching(firstSong, secondSong) == 25,
+                    "Se espera que el matching entre Blinding Lights y Untitled sea de 25 puntos")
+        }
+        
+        @Test func getBPMMatching() async throws {
+            #expect(discoverTasks.getBPMMatching(firstSong, secondSong) == 0,
+                    "Se espera que el matching de bpm entre Blinding Lights y Untitled sea de 0 puntos")
+        }
+        
+        @Test func getTagsMatching() async throws {
+            #expect(discoverTasks.getTagsMatching(firstSong, secondSong) == 10,
+                    "Se espera que el matching de tags entre Blinding Lights y Untitled sea de 10 puntos")
+        }
+        
+        @Test func getTonalityMatching() async throws {
+            #expect(discoverTasks.getTonalityMatching(firstSong, secondSong) == 0,
+                    "Se espera que el matching de tonalidades entre Blinding Lights y Untitled sea de 0 puntos")
+        }
+        
+        @Test func getPopularityMatching() async throws {
+            #expect(discoverTasks.getPopularityMatching(firstSong, secondSong) == 9.5,
+                    "Se espera que el matching de popularidad entre Blinding Lights y Untitled sea de 9.5 puntos")
+        }
+        
+        @Test func getTotalMatching() async throws {
+            #expect(discoverTasks.calculateMatchingPoints(firstSong, secondSong) == 44.5,
+                    "De acuerdo a la suma de los puntos anteriores se espera que el match de ambas canciones sea del 44.5%")
+        }
+    }
 }

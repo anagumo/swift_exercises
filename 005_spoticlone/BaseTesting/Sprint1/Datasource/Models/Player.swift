@@ -45,6 +45,7 @@ struct Player: PlayerTasks {
         }
     }
     
+    // MARK: General function to play songs
     func play(songs: [Song], description: String, completion: () -> ()) {
         print("Playing songs from \(description)")
         songs.forEach { song in
@@ -54,6 +55,7 @@ struct Player: PlayerTasks {
         completion()
     }
     
+    // MARK: Functions to handle each Menu option
     mutating func selectPlaylist() {
         if djConfiguration.hasPlaylists() {
             print("Select a playlist:")
@@ -123,7 +125,7 @@ struct Player: PlayerTasks {
         }
     }
     
-    func filterSongs(by tags: Set<String>) -> [Song] {
+    private func filterSongs(by tags: Set<String>) -> [Song] {
         songs.filter { song in
             song.metadata.tags.contains { tag in
                 tags.contains(tag)
@@ -147,8 +149,8 @@ struct Player: PlayerTasks {
             if predicate(filteredSongs.count) {
                 print("You must select at least 2 songs, ej: 5 1: ")
             } else {
-                var discover = Discover(firstSong: filteredSongs.first, secondSong: filteredSongs.last)
-                discover.calculateMatchingPoints()
+                var discover = Discover()
+                var _ = discover.calculateMatchingPoints(songs.first, songs.last)
                 print(discover.displayMatchingPoints())
             }
         }

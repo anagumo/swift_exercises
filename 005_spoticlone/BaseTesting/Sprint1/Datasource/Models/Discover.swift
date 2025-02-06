@@ -7,34 +7,38 @@
 
 import Foundation
 
-// To practice and play with optionals
-struct Discover {
-    let firstSong: Song?
-    let secondSong: Song?
+// I keep protocol here to set Sprint1Testing as Target too
+protocol DiscoverTasks {
+    mutating func calculateMatchingPoints(_ firstSong: Song?,_ secondSong: Song?) -> Double
+    func displayMatchingPoints() -> String
+    func getGenreMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double
+    func getBPMMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double
+    func getTagsMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double
+    func getTonalityMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double
+    func getPopularityMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double
+}
+
+struct Discover: DiscoverTasks {
     var matchingPoints: Double
     
-    init(firstSong: Song?, secondSong: Song?, matchingPoints: Double = 0) {
-        self.firstSong = firstSong
-        self.secondSong = secondSong
+    init(matchingPoints: Double = 0) {
         self.matchingPoints = matchingPoints
     }
     
-    mutating func calculateMatchingPoints() {
-        matchingPoints = matchingPoints + getGenreMatching()
-        matchingPoints = matchingPoints + getBPMMatching()
-        matchingPoints = matchingPoints + getTagsMatching()
-        matchingPoints = matchingPoints + getTonalityMatching()
-        matchingPoints = matchingPoints + getPopularityMatching()
+    mutating func calculateMatchingPoints(_ firstSong: Song?,_ secondSong: Song?) -> Double {
+        matchingPoints = matchingPoints + getGenreMatching(firstSong, secondSong)
+        matchingPoints = matchingPoints + getBPMMatching(firstSong, secondSong)
+        matchingPoints = matchingPoints + getTagsMatching(firstSong, secondSong)
+        matchingPoints = matchingPoints + getTonalityMatching(firstSong, secondSong)
+        matchingPoints = matchingPoints + getPopularityMatching(firstSong, secondSong)
+        return matchingPoints
     }
     
     func displayMatchingPoints() -> String {
-        guard let firstTitle = firstSong?.getTitle(), let secondTitle = secondSong?.getTitle() else {
-            return "Unknown percentage"
-        }
-        return "The matching percentage between \(firstTitle) and \(secondTitle) is: \(matchingPoints)%\n"
+        "The matching percentage is: \(matchingPoints)%\n"
     }
     
-    func getGenreMatching() -> Double {
+    func getGenreMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double {
         let genres = [
             "Pop": ["Dance-Pop", "Pop-Rock", "Indie-Pop", "Electropop"],
             "Dance-Pop": ["Pop", "Electropop", "Disco"],
@@ -73,7 +77,7 @@ struct Discover {
         return matchingPoints
     }
     
-    func getBPMMatching() -> Double {
+    func getBPMMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double {
         let subtractedBPM = abs((firstSong?.technicalInfo.bpm ?? Int.zero) - (secondSong?.technicalInfo.bpm ?? Int.zero))
         var matchingPoints = Double.zero
         
@@ -93,7 +97,7 @@ struct Discover {
         return matchingPoints
     }
     
-    func getTagsMatching() -> Double {
+    func getTagsMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double {
         var commonTags = Double.zero
         let maxTags: Double = 3
         let calculateMatchingPoints: (Double, Double) -> Double = { ($0 / $1) * 30 } // To practice with closures
@@ -108,7 +112,7 @@ struct Discover {
         return calculateMatchingPoints(commonTags, maxTags)
     }
     
-    func getTonalityMatching() -> Double {
+    func getTonalityMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double {
         let tonalities = [
             "C": ["G", "F", "Am"],
             "C#": ["G#", "F#", "A#m"],
@@ -148,7 +152,7 @@ struct Discover {
         return matchingPoints
     }
     
-    func getPopularityMatching() -> Double {
+    func getPopularityMatching(_ firstSong: Song?,_ secondSong: Song?) -> Double {
         let subtractedPopularity = abs((firstSong?.metadata.popularity ?? Int.zero) - (secondSong?.metadata.popularity ?? Int.zero))
         let calculateMatchingPoints: (Int) -> Double = {
             10 * (1 - (Double($0) / 100))

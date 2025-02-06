@@ -27,6 +27,7 @@
 		872AA7092D3ED0BC00686774 /* Exceptions for "Sprint1" folder in "Sprint1Testing" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Datasource/Models/Discover.swift,
 				Datasource/SongModels.swift,
 				Datasource/songs.json,
 				Datasource/SongsLoader.swift,

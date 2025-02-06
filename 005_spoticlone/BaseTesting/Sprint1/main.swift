@@ -16,6 +16,7 @@ class Main {
 
     // MARK: - Main
     func main() {
+        // To run tests you must comment lines 20 and 21
         var spoticlonePlayer = Player()
         spoticlonePlayer.open()
     }
